@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/page": "/admin",
+  "/api/merchant/route": "/api/merchant",
+  "/api/merchants/route": "/api/merchants",
+  "/api/register/route": "/api/register",
+  "/api/upload/route": "/api/upload",
+  "/page": "/",
+  "/register/page": "/register",
+  "/register/success/page": "/register/success"
+}

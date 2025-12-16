@@ -1,0 +1,10 @@
+:HL["/_next/static/chunks/8a80e7184ad3a13f.css","style"]
+:HL["/_next/static/chunks/bec119c507927e84.css","style"]
+:HL["/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/vibrant-african-marketplace-with-colorful-fresh-pr.jpg","image"]
+:HL["/geometric-pattern-modern-grid-network-connections-.jpg","image"]
+:HL["/zimbabwe-business-owner-smartphone-digital-commerc.jpg","image"]
+:HL["/success-growth-chart-upward-trend-celebration-achi.jpg","image"]
+:HL["/modern-african-storefront-shop-business-owner-zimb.jpg","image"]
+0:{"buildId":"N5eKr-DYC8LlSP4rB_zxb","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
