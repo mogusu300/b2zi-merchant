@@ -87,13 +87,15 @@ export default function LandingPage() {
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 h-auto border-2 bg-transparent transition-all duration-300 hover:scale-105 hover:border-accent"
-              >
-                See How It Works
-              </Button>
+              <Link href="#how-it-works">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="text-lg px-8 py-6 h-auto border-2 bg-transparent transition-all duration-300 hover:scale-105 hover:border-accent"
+                >
+                  See How It Works
+                </Button>
+              </Link>
             </div>
             <p className="mt-8 text-sm text-muted-foreground flex items-center justify-center gap-2 animate-fade-in-up animation-delay-400">
               <CheckCircle2 className="h-4 w-4 text-accent animate-pulse" />
@@ -338,7 +340,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 md:py-32 bg-muted/30 relative overflow-hidden">
+      <section id="how-it-works" className="py-20 md:py-32 bg-muted/30 relative overflow-hidden">
         <div className="absolute inset-0 -z-10 opacity-10">
           <img
             src="/success-growth-chart-upward-trend-celebration-achi.jpg"
