@@ -20,19 +20,15 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    // TODO: Uncomment when database is connected
-    // const merchant = await prisma.merchant.update({
-    //   where: { id: merchantId },
-    //   data: { status }
-    // })
-
-    // For now, return mock response
-    console.log(`[Merchant Update] ${merchantId} status changed to ${status}`)
+    const merchant = await prisma.merchant.update({
+      where: { id: merchantId },
+      data: { status }
+    })
 
     return NextResponse.json({
       success: true,
       message: `Merchant status updated to ${status}`,
-      // merchant (when DB connected)
+      merchant
     })
   } catch (error) {
     console.error('[Merchant Update] Error:', error)
