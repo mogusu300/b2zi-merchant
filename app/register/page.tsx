@@ -261,8 +261,8 @@ export default function RegisterPage() {
 
               <Card className="p-6 bg-muted/50 border-accent/20 animate-fade-in-up animation-delay-300 hover:border-accent transition-all duration-300 hover:shadow-lg">
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground">Launch Bonus:</strong> The first 250 merchants to register will
-                  receive lifetime fee reductions of up to 50% plus premium features at no additional cost.
+                  <strong className="text-foreground">Launch Bonus:</strong> The first 100 merchants to register will
+                  no monthly fees.
                 </p>
               </Card>
             </div>
