@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Merchants (Sellers)
 model Merchant {
   id                String    @id @default(cuid())
   businessName      String
@@ -24,96 +23,69 @@ model Merchant {
   idFrontUrl        String?   // URL to uploaded ID front
   idBackUrl         String?   // URL to uploaded ID back
   status            String    @default("pending") // pending, approved, rejected
-  products          Product[]
-  orders            Order[]
+  products          Product[] // Products sold by this merchant
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
 
-// Customers (Buyers)
 model Customer {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  phone     String?
-  cartItems CartItem[]
-  orders    Order[]
+  id       String  @id @default(cuid())
+  email    String  @unique
+  name     String
+  password String
+  orders   Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-// Products (Listings)
 model Product {
-  id          String      @id @default(cuid())
-  name        String
-  description String
-  price       Float
-  category    String
-  images      String[]    // Array of image URLs
-  colors      String[]    // Array of available colors
-  types       String[]    // Array of product types/variants
-  inStock     Boolean     @default(true)
-  rating      Float?
-  reviews     Int         @default(0)
-  merchantId  String
-  merchant    Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-}
-
-// Categories
-model Category {
-  id    String @id @default(cuid())
-  name  String @unique
-  icon  String
-  count Int    @default(0)
-}
-
-// Shopping Cart Items
-model CartItem {
-  id              String   @id @default(cuid())
-  customerId      String
-  customer        Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  productId       String
-  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity        Int      @default(1)
-  selectedColor   String?
-  selectedType    String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@unique([customerId, productId])
-}
-
-// Orders
-model Order {
-  id               String      @id @default(cuid())
-  customerId       String
-  customer         Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  merchantId       String
-  merchant         Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  items            OrderItem[]
-  total            Float
-  status           String      @default("pending") // pending, processing, shipped, delivered, cancelled
-  trackingNumber   String?
-  estimatedDelivery DateTime?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-}
-
-// Order Items (Individual products in an order)
-model OrderItem {
   id            String   @id @default(cuid())
-  orderId       String
-  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId     String
-  product       Product  @relation(fields: [productId], references: [id])
-  quantity      Int
-  price         Float    // Price at time of purchase
-  selectedColor String?
-  selectedType  String?
+  name          String
+  description   String
+  price         Float
+  category      String
+  images        String[] // Array of image URLs
+  colors        String[]?
+  types         String[]?
+  sellerId      String
+  seller        Merchant @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  inStock       Boolean  @default(true)
+  rating        Float?
+  reviews       Int      @default(0)
+  orderItems    OrderItem[]
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([category])
+}
+
+model Order {
+  id        String    @id @default(cuid())
+  customerId String
+  customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+  total     Float
+  status    String    @default("pending") // pending, processing, shipped, delivered, cancelled
+  trackingNumber String?
+  estimatedDelivery String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([customerId])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  selectedColor String?
+  selectedType String?
+  price     Float   // Price at time of order
+
+  @@index([orderId])
+  @@index([productId])
 }
