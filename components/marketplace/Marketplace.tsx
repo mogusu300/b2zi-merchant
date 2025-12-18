@@ -84,7 +84,7 @@ export const Marketplace: React.FC = () => {
                 </button>
               ) : (
                 <button
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push("/customers/login")}
                   className="px-4 py-2 bg-[#2e3621] text-white font-bold rounded-lg hover:bg-black transition-all flex items-center gap-2"
                 >
                   <LogIn className="w-4 h-4" />
@@ -206,7 +206,7 @@ export const Marketplace: React.FC = () => {
                   Continue Browsing
                 </button>
                 <button
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push("/customers/login")}
                   className="flex-1 py-3 px-4 bg-gradient-to-r from-[#2e3621] to-[#000000] text-white font-bold rounded-xl hover:shadow-lg transition-all"
                 >
                   Sign In
