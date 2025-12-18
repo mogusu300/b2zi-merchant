@@ -95,9 +95,13 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ items, isOpen, onClose
               <span className="text-2xl font-black text-[#2e3621]">${total.toFixed(2)}</span>
             </div>
             <Link
-              href="/checkout"
+              href="/customers/checkout"
               className="block w-full py-4 bg-[#2e3621] hover:bg-black text-white font-bold rounded-xl transition-all text-center"
-              onClick={onClose}
+              onClick={() => {
+                // Save cart to localStorage before redirecting
+                localStorage.setItem('b2zi_cart', JSON.stringify(items))
+                onClose()
+              }}
             >
               Proceed to Checkout
             </Link>
