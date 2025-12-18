@@ -48,7 +48,14 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    return NextResponse.json(products)
+    // Map seller info to response
+    const productsWithSeller = products.map(product => ({
+      ...product,
+      sellerName: product.seller?.businessName || product.seller?.ownerName || 'Unknown Seller',
+      sellerCompany: product.seller?.businessName,
+    }))
+
+    return NextResponse.json(productsWithSeller)
   } catch (error) {
     console.error('Error fetching products:', error)
     return NextResponse.json(

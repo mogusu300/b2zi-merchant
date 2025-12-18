@@ -6,11 +6,12 @@ import type { Product, CartItem } from "@/types"
 import { ProductCard } from "./ProductCard"
 import { ProductDetail } from "./ProductDetail"
 import { CartSidebar } from "./CartSidebar"
-import { mockProducts, mockCategories } from "@/lib/mock-data"
 import { Search, SlidersHorizontal, LogIn } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export const Marketplace: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<string[]>([])
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
@@ -19,22 +20,49 @@ export const Marketplace: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const router = useRouter()
 
+  // Load products from database
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/products")
+        if (response.ok) {
+          const data = await response.json()
+          setProducts(data)
+          
+          // Extract unique categories
+          const uniqueCategories = Array.from(new Set(data.map((p: Product) => p.category)))
+          setCategories(uniqueCategories as string[])
+        }
+      } catch (err) {
+        console.error("Failed to fetch products:", err)
+        setError("Failed to load products")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
+  // Check authentication
   useEffect(() => {
     const user = localStorage.getItem("b2zi_user")
     setIsAuthenticated(!!user)
   }, [])
 
   const filteredProducts = useMemo(() => {
-    return mockProducts.filter((product) => {
+    return products.filter((product) => {
       const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
-  }, [selectedCategory, searchQuery])
+  }, [selectedCategory, searchQuery, products])
 
   const handleAddToCart = (product: Product, quantity = 1, color?: string, type?: string) => {
     if (!isAuthenticated) {
@@ -97,7 +125,24 @@ export const Marketplace: React.FC = () => {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            {error}
+          </div>
+        )}
+
+        {loading && (
+          <div className="flex items-center justify-center py-16">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mb-4"></div>
+              <p className="text-gray-600">Loading products...</p>
+            </div>
+          </div>
+        )}
+
+        {!loading && (
+          <>
+            {/* Hero Section */}
         <div className="bg-gradient-to-r from-[#2e3621] to-[#000000] text-white rounded-2xl p-8 mb-8 shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5"></div>
           <div className="relative max-w-2xl">
@@ -132,17 +177,27 @@ export const Marketplace: React.FC = () => {
         {/* Categories */}
         <div className="mb-8">
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {mockCategories.map((category) => (
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all ${
+                selectedCategory === "all"
+                  ? "bg-[#2e3621] text-white shadow-lg scale-105"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
+              }`}
+            >
+              All Products
+            </button>
+            {categories.map((category) => (
               <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
+                key={category}
+                onClick={() => setSelectedCategory(category)}
                 className={`px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all ${
-                  selectedCategory === category.id
+                  selectedCategory === category
                     ? "bg-[#2e3621] text-white shadow-lg scale-105"
                     : "bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-200"
                 }`}
               >
-                {category.name} ({category.count})
+                {category}
               </button>
             ))}
           </div>
@@ -152,9 +207,7 @@ export const Marketplace: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-[#000000]">
-              {selectedCategory === "all"
-                ? "All Products"
-                : mockCategories.find((c) => c.id === selectedCategory)?.name}
+              {selectedCategory === "all" ? "All Products" : selectedCategory}
             </h2>
             <p className="text-gray-600 mt-1">{filteredProducts.length} products found</p>
           </div>
@@ -185,6 +238,8 @@ export const Marketplace: React.FC = () => {
               Clear Filters
             </button>
           </div>
+        )}
+        </>
         )}
       </div>
 
