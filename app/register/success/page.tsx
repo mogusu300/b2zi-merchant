@@ -93,14 +93,12 @@ export default function SuccessPage() {
           </Card>
 
           <Card className="p-8 bg-gradient-to-br from-primary to-primary/90 text-primary-foreground border-0 shadow-xl mb-8 animate-fade-in-up animation-delay-200">
-            <h3 className="text-2xl font-bold mb-4 text-center">Early Merchant Benefits</h3>
+            <h3 className="text-2xl font-bold mb-4 text-center">🚀 Launch Bonuses (First 100 Merchants Only)</h3>
             <ul className="space-y-3">
               {[
-                "Priority placement in search results and category pages",
-                "Featured merchant badge on your storefront",
-                "50% fee reduction for the first 6 months",
-                "Dedicated onboarding support and training",
-                "Early access to premium features and analytics",
+                "0% Commission on your first $100 USD of sales.",
+                "Free Delivery Vouchers for your first 10 customers.",
+                '"Verified Founder" Badge on your store profile',
               ].map((benefit, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" />
