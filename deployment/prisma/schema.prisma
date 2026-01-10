@@ -6,23 +6,200 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:../merchant.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Merchant {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   businessName      String
   ownerName         String
-  email             String   @unique
+  email             String    @unique
   phone             String
   businessType      String?
   businessAddress   String?
-  password          String
-  idType            String   // "nrc" or "passport"
-  idFrontUrl        String?  // URL to uploaded ID front
-  idBackUrl         String?  // URL to uploaded ID back
-  status            String   @default("pending") // pending, approved, rejected
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  password          String    // hashed password
+  idType            String    // "nrc" or "passport"
+  idFrontUrl        String?   // URL to uploaded ID front
+  idBackUrl         String?   // URL to uploaded ID back
+  status            String    @default("pending") // pending, approved, rejected
+  isVerified        Boolean   @default(false)
+  lastLogin         DateTime?
+  loginAttempts     Int       @default(0)
+  lockedUntil       DateTime?
+  products          Product[] // Products sold by this merchant
+  sessions          Session[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model Customer {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String
+  password          String    // hashed password
+  phone             String?
+  isVerified        Boolean   @default(false)
+  lastLogin         DateTime?
+  loginAttempts     Int       @default(0)
+  lockedUntil       DateTime?
+  orders            Order[]
+  sessions          Session[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model Session {
+  id            String    @id @default(cuid())
+  token         String    @unique
+  type          String    // "merchant" or "customer"
+  userId        String    // Either Merchant or Customer ID
+  merchantId    String?
+  customerId    String?
+  merchant      Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  customer      Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ipAddress     String?
+  userAgent     String?
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+
+  @@index([token])
+  @@index([userId])
+  @@index([merchantId])
+  @@index([customerId])
+  @@index([expiresAt])
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  price         Float    // Base price - can be overridden by variants
+  category      String
+  images        String[] // Primary product images
+  sellerId      String
+  seller        Merchant @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  
+  // Variant configuration
+  variantGroups ProductVariantGroup[]
+  variants      ProductVariant[]
+  
+  // Simple color and type variants
+  colorVariants Json?    // [{color: string, price?: number}]
+  typeVariants  Json?    // [{type: string, price?: number}]
+  
+  // Stock and status
+  inStock       Boolean  @default(true)
+  totalStock    Int      @default(0)   // Cached total stock across all variants
+  
+  // Ratings
+  rating        Float?
+  reviews       Int      @default(0)
+  
+  // Relationships
+  orderItems    OrderItem[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([category])
+}
+
+model ProductVariantGroup {
+  id        String @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String  // e.g., "Color", "Size", "Material"
+  values    String[] // e.g., ["Red", "Blue", "Green"]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@unique([productId, name])
+}
+
+model ProductVariant {
+  id          String @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  // Variant attributes - stored as JSON for flexibility
+  // e.g., {"color": "Red", "size": "M"}
+  attributes  Json
+  
+  // SKU for tracking
+  sku         String?
+  
+  // Pricing (optional - inherits from product if not set)
+  price       Float?
+  
+  // Inventory management
+  stock       Int     @default(0)
+  reserved    Int     @default(0)  // Stock reserved for orders
+  
+  // Variant-specific images (optional)
+  images      String[]
+  
+  // Shipping
+  weight      Float?  // in grams
+  dimensions  Json?   // {length, width, height} in cm
+  
+  // Status
+  active      Boolean @default(true)
+  
+  // Tracking
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productId])
+  @@unique([productId, sku])
+}
+
+model Order {
+  id        String    @id @default(cuid())
+  customerId String
+  customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+  total     Float
+  status    String    @default("pending") // pending, processing, shipped, delivered, cancelled
+  
+  // Shipping & Delivery
+  deliveryAddress String     // Full address for delivery
+  deliveryCity    String
+  deliveryState   String
+  deliveryZipCode String
+  
+  // Customer Contact Information
+  customerName    String
+  customerEmail   String
+  customerPhone   String     // Phone number for delivery contact
+  customerWhatsApp String?    // Optional WhatsApp number for seller communication
+  
+  // Tracking
+  trackingNumber  String?
+  estimatedDelivery String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([customerId])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  variantId   String?
+  variantData Json?   // Snapshot of variant attributes selected
+  quantity    Int
+  price       Float   // Price at time of order
+  sku         String? // SKU snapshot
+
+  @@index([orderId])
+  @@index([productId])
 }
