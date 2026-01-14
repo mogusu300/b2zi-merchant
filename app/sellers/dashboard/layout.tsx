@@ -80,15 +80,15 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary/30">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -99,37 +99,37 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-64 bg-background border-r border-border z-50 transform transition-transform duration-200 ease-in-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+          <div className="h-16 flex items-center justify-between px-6 border-b border-border">
             <Link href="/" className="flex items-center gap-1 group">
-              <span className="text-3xl font-serif font-black text-black tracking-tighter group-hover:opacity-80 transition-opacity">
-                B<span className="text-[#2e3621]">2</span>Z<span className="text-[#b1c98d]">i</span>
+              <span className="text-3xl font-serif font-black text-foreground tracking-tighter group-hover:opacity-80 transition-opacity">
+                B<span className="text-primary">2</span>Z<span className="text-accent">i</span>
               </span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-600"
+              className="lg:hidden text-muted-foreground"
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
           {/* Store Info */}
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-6 py-4 border-b border-border">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-[#b1c98d] rounded-lg">
-                <Store className="w-5 h-5 text-[#2e3621]" />
+              <div className="p-2 bg-accent rounded-lg">
+                <Store className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-black truncate">
+                <p className="text-sm font-bold text-foreground truncate">
                   {merchant?.businessName || merchant?.ownerName || 'Store'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">Active Seller</p>
+                <p className="text-xs text-muted-foreground truncate">Active Seller</p>
               </div>
             </div>
           </div>
@@ -146,8 +146,8 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-[#2e3621] text-white'
-                        : 'text-gray-700 hover:bg-[#b1c98d]/20 hover:text-[#2e3621]'
+                        ? 'bg-primary text-background'
+                        : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -159,11 +159,11 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-border">
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 bg-transparent"
+              className="w-full justify-start text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive bg-transparent"
             >
               <LogOut className="w-5 h-5 mr-3" />
               Logout
@@ -175,22 +175,22 @@ export default function SellerDashboardLayout({ children }: { children: React.Re
       {/* Main Content */}
       <div className="lg:pl-64">
         {/* Top Navigation */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-30">
+        <header className="h-16 bg-background border-b border-border flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-600"
+            className="lg:hidden text-muted-foreground"
           >
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex-1" />
           <div className="flex items-center space-x-4">
             <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-black">
+              <p className="text-sm font-medium text-foreground">
                 {merchant?.ownerName || 'Merchant'}
               </p>
-              <p className="text-xs text-gray-500">{merchant?.email}</p>
+              <p className="text-xs text-muted-foreground">{merchant?.email}</p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-[#b1c98d] flex items-center justify-center text-[#2e3621] font-bold">
+            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-primary font-bold">
               {merchant?.ownerName?.charAt(0) || 'M'}
             </div>
           </div>
