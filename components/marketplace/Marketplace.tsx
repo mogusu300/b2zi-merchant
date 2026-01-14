@@ -200,14 +200,14 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
   const cartTotal = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white">
+    <div className="min-h-screen relative overflow-hidden bg-background">
       {/* Navigation - Modern & Clean */}
-      <nav className="border-b border-gray-200 bg-white sticky top-0 z-40">
+      <nav className="border-b border-border bg-background sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <a href="/" className="flex items-center gap-1 group">
-              <span className="text-3xl font-serif font-black text-gray-900 tracking-tighter group-hover:opacity-80 transition-opacity">
-                B<span className="text-[#2e3621]">2</span>Z<span className="text-[#b1c98d]">i</span>
+              <span className="text-3xl font-serif font-black text-foreground tracking-tighter group-hover:opacity-80 transition-opacity">
+                B<span className="text-primary">2</span>Z<span className="text-accent">i</span>
               </span>
             </a>
 
@@ -223,7 +223,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
               ) : (
                 <button
                   onClick={handleLoginClick}
-                  className="flex items-center gap-2 px-4 py-2.5 text-[#2e3621] font-semibold hover:bg-gray-100 rounded-lg transition-all active:scale-95"
+                  className="flex items-center gap-2 px-4 py-2.5 text-primary font-semibold hover:bg-secondary rounded-lg transition-all active:scale-95"
                 >
                   <LogIn className="w-4 h-4" />
                   Login
@@ -233,7 +233,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
               {/* Cart Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative px-4 py-2.5 bg-[#2e3621] text-white font-semibold rounded-lg hover:bg-black transition-all active:scale-95 flex items-center gap-2 shadow-sm hover:shadow-md"
+                className="relative px-4 py-2.5 bg-primary text-background font-semibold rounded-lg hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2 shadow-sm hover:shadow-md"
               >
                 <ShoppingBag className="w-4 h-4" />
                 Cart ({cartTotal})
@@ -245,7 +245,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive text-sm font-medium">
             {error}
           </div>
         )}
@@ -253,8 +253,8 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
         {loading && (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-[#2e3621] mb-4"></div>
-              <p className="text-gray-500 font-medium">Loading amazing products...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-primary mb-4"></div>
+              <p className="text-muted-foreground font-medium">Loading amazing products...</p>
             </div>
           </div>
         )}
@@ -262,7 +262,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
         {!loading && (
           <>
             <div className="mb-12">
-              <div className="relative rounded-3xl p-8 md:p-12 shadow-xl overflow-hidden h-80 flex items-center justify-center bg-gradient-to-r from-[#2e3621] to-[#b1c98d]">
+              <div className="relative rounded-3xl p-8 md:p-12 shadow-xl overflow-hidden h-80 flex items-center justify-center bg-gradient-to-r from-primary to-accent">
                 {/* Animated Background with Trippy Design */}
                 <svg
                   className="absolute inset-0 w-full h-full opacity-20"
@@ -318,19 +318,19 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
             {/* Search & Filters - Organized layout */}
             <div className="mb-8 space-y-4">
               {/* Search Bar */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+              <div className="bg-background rounded-2xl shadow-sm border border-border p-4">
                 <div className="flex gap-3 items-center">
-                  <Search className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                   <input
                     type="text"
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="flex-1 bg-transparent border-0 focus:outline-none text-gray-900 placeholder:text-gray-500"
+                    className="flex-1 bg-transparent border-0 focus:outline-none text-foreground placeholder:text-muted-foreground"
                   />
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="p-2.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 hover:text-gray-900 flex items-center gap-2"
+                    className="p-2.5 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground flex items-center gap-2"
                   >
                     <SlidersHorizontal className="w-5 h-5" />
                   </button>
@@ -339,13 +339,13 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
 
               {/* Filters Panel - Sorting & View */}
               {showFilters && (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 space-y-4">
+                <div className="bg-background rounded-2xl shadow-sm border border-border p-4 space-y-4">
                   <div>
-                    <label className="text-sm font-semibold text-gray-900 mb-2 block">Sort By</label>
+                    <label className="text-sm font-semibold text-foreground mb-2 block">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => handleSortChange(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2e3621]"
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                     >
                       <option value="newest">Newest</option>
                       <option value="price-low">Price: Low to High</option>
@@ -362,8 +362,8 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
                   onClick={() => handleCategoryChange("all")}
                   className={`px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
                     selectedCategory === "all"
-                      ? "bg-[#2e3621] text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:border-[#b1c98d] hover:bg-gray-50"
+                      ? "bg-primary text-background shadow-md"
+                      : "bg-background border border-border text-foreground hover:border-primary hover:bg-secondary"
                   }`}
                 >
                   All Products
@@ -374,8 +374,8 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
                     onClick={() => handleCategoryChange(category)}
                     className={`px-6 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
                       selectedCategory === category
-                        ? "bg-[#2e3621] text-white shadow-md"
-                        : "bg-white border border-gray-300 text-gray-700 hover:border-[#b1c98d] hover:bg-gray-50"
+                        ? "bg-primary text-background shadow-md"
+                        : "bg-background border border-border text-foreground hover:border-primary hover:bg-secondary"
                     }`}
                   >
                     {category}
@@ -386,10 +386,10 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
 
             {/* Results Header */}
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-1">
+              <h2 className="text-3xl font-bold text-foreground mb-1">
                 {selectedCategory === "all" ? "All Products" : selectedCategory}
               </h2>
-              <p className="text-gray-600">{filteredAndSortedProducts.length} products available</p>
+              <p className="text-muted-foreground">{filteredAndSortedProducts.length} products available</p>
             </div>
 
             {/* Products Grid - Responsive and clean */}
@@ -410,17 +410,17 @@ export const Marketplace: React.FC<MarketplaceProps> = ({ initialProducts = [] }
               </div>
             ) : (
               <div className="text-center py-20">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-2xl mb-4">
-                  <ShoppingBag className="w-8 h-8 text-gray-400" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary rounded-2xl mb-4">
+                  <ShoppingBag className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <p className="text-gray-600 text-lg font-medium mb-4">No products found</p>
-                <p className="text-gray-600 mb-6">Try adjusting your filters or search query</p>
+                <p className="text-foreground text-lg font-medium mb-4">No products found</p>
+                <p className="text-muted-foreground mb-6">Try adjusting your filters or search query</p>
                 <button
                   onClick={() => {
                     setSearchQuery("")
                     setSelectedCategory("all")
                   }}
-                  className="px-6 py-2.5 bg-[#2e3621] text-white font-semibold rounded-lg hover:bg-black transition-all"
+                  className="px-6 py-2.5 bg-primary text-background font-semibold rounded-lg hover:bg-primary/90 transition-all"
                 >
                   Clear Filters
                 </button>
