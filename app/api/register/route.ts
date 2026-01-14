@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { hashPassword } from '@/lib/auth-utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,6 +12,14 @@ export async function POST(request: NextRequest) {
     if (!businessName || !ownerName || !email || !phone || !businessType || !businessAddress || !idType || !password) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // Validate password strength
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: 'Password must be at least 8 characters long' },
         { status: 400 }
       )
     }
@@ -36,11 +45,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Hash password before storing in production
-    // For now, storing as-is (NOT RECOMMENDED FOR PRODUCTION)
-    // Use bcrypt or similar in production:
-    // import bcrypt from 'bcrypt'
-    // const hashedPassword = await bcrypt.hash(password, 10)
+    // Hash password
+    const hashedPassword = await hashPassword(password)
 
     // Create new merchant
     const merchant = await prisma.merchant.create({
@@ -51,7 +57,7 @@ export async function POST(request: NextRequest) {
         phone,
         businessType,
         businessAddress,
-        password, // TODO: Hash this in production
+        password: hashedPassword,
         idType,
         idFrontUrl: body.idFrontUrl || null,
         idBackUrl: body.idBackUrl || null,
@@ -59,11 +65,14 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Return merchant without password
+    const { password: _, ...merchantData } = merchant
+
     return NextResponse.json(
       { 
         success: true, 
-        message: 'Merchant registered successfully',
-        merchantId: merchant.id 
+        message: 'Merchant registered successfully. Please log in with your credentials.',
+        merchant: merchantData 
       },
       { status: 201 }
     )

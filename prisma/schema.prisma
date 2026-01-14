@@ -165,7 +165,7 @@ model Order {
   customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
   items     OrderItem[]
   total     Float
-  status    String    @default("pending") // pending, processing, shipped, delivered, cancelled
+  status    String    @default("pending_approval") // pending_approval, approved, awaiting_payment, paid, dispatched, in_transit, delivered, rejected, cancelled
   
   // Shipping & Delivery
   deliveryAddress String     // Full address for delivery
@@ -179,13 +179,38 @@ model Order {
   customerPhone   String     // Phone number for delivery contact
   customerWhatsApp String?    // Optional WhatsApp number for seller communication
   
-  // Tracking
+  // APPROVAL WORKFLOW
+  approvedAt      DateTime?       // When merchant approved
+  approvedBy      String?         // Merchant ID who approved
+  rejectedAt      DateTime?       // When merchant rejected
+  rejectedReason  String?         // Why rejected (optional)
+  
+  // PAYMENT
+  paidAt          DateTime?       // When payment received
+  paymentStatus   String?         // "pending" | "paid" | "failed"
+  paymentMethod   String?         // "card" | "cash" | "bank_transfer"
+  
+  // TRACKING & FULFILLMENT
+  dispatchedAt    DateTime?       // When seller dispatched
+  trackedAt       DateTime?       // Last tracking update
+  trackingStatus  String?         // "dispatched" | "in_transit" | "delivered"
+  trackingMessage String?         // "Driver on the way", "Out for delivery", etc.
   trackingNumber  String?
   estimatedDelivery String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  driverName      String?         // Optional driver info
+  driverPhone     String?         // Optional driver info
+  
+  // AUDIT
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // RELATIONSHIPS
+  orderEvents     OrderEvent[]
+  orderPayments   OrderPayment[]
 
   @@index([customerId])
+  @@index([status])
+  @@index([approvedBy])
 }
 
 model OrderItem {
@@ -202,4 +227,58 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model OrderEvent {
+  id          String    @id @default(cuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // EVENT TYPE
+  eventType   String    // "created" | "approved" | "rejected" | "paid" | "dispatched" | "tracking_updated" | "delivered" | "cancelled"
+  
+  // WHO DID IT
+  actorId     String?   // User ID (merchant or customer)
+  actorType   String?   // "merchant" | "customer" | "system"
+  
+  // WHAT CHANGED
+  oldStatus   String?   // Previous status
+  newStatus   String?   // New status
+  message     String?   // Additional context
+  metadata    Json?     // Extra data (payment details, tracking info, etc.)
+  
+  // TIMESTAMPS
+  createdAt   DateTime  @default(now())
+  
+  @@index([orderId])
+  @@index([createdAt])
+  @@index([eventType])
+}
+
+model OrderPayment {
+  id            String    @id @default(cuid())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // PAYMENT DETAILS
+  amount        Float
+  currency      String    @default("ZWL")
+  method        String    // "card" | "bank_transfer" | "cash_on_delivery"
+  status        String    // "pending" | "processing" | "completed" | "failed"
+  
+  // PROVIDER REFERENCES
+  stripePaymentIntentId  String?
+  transactionId          String?
+  
+  // ERROR TRACKING
+  failureReason String?
+  failureCode   String?
+  
+  // TIMESTAMPS
+  initiatedAt   DateTime  @default(now())
+  completedAt   DateTime?
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([orderId])
+  @@index([status])
 }

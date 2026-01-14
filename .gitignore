@@ -35,6 +35,9 @@ yarn-error.log*
 merchant.db
 merchant.db-journal
 
+# Uploaded files (local storage)
+/public/uploads
+
 # IDE
 .vscode/
 .idea/

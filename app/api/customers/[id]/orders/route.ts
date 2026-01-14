@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
+    
     const orders = await prisma.order.findMany({
-      where: { customerId: params.id },
+      where: { customerId: id },
       include: {
         items: {
           include: {

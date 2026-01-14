@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Upload, X } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -24,7 +25,6 @@ interface FormData {
   stock: string
   colors: string
   types: string
-  images: string
 }
 
 const CATEGORIES = [
@@ -51,10 +51,11 @@ export default function EditProduct() {
     stock: '',
     colors: '',
     types: '',
-    images: '',
   })
+  const [images, setImages] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -71,8 +72,8 @@ export default function EditProduct() {
             stock: (product.stock || 0).toString(),
             colors: product.colors?.join(', ') || '',
             types: product.types?.join(', ') || '',
-            images: product.images?.join(', ') || '',
           })
+          setImages(product.images || [])
         }
       } catch (err) {
         console.error('Failed to load product:', err)
@@ -94,6 +95,61 @@ export default function EditProduct() {
     setFormData((prev) => ({ ...prev, category: value }))
   }
 
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files
+    if (!files) return
+
+    setUploading(true)
+    const uploadedUrls: string[] = []
+
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+          setError(`${file.name} is not an image file`)
+          continue
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+          setError(`${file.name} is larger than 10MB`)
+          continue
+        }
+
+        // Upload file
+        const formDataToUpload = new FormData()
+        formDataToUpload.append('file', file)
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formDataToUpload,
+        })
+
+        if (!response.ok) {
+          const data = await response.json()
+          setError(data.error || 'Upload failed')
+          continue
+        }
+
+        const data = await response.json()
+        uploadedUrls.push(data.url)
+      }
+
+      setImages([...images, ...uploadedUrls])
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setUploading(false)
+      e.currentTarget.value = ''
+    }
+  }
+
+  const handleRemoveImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
@@ -102,6 +158,12 @@ export default function EditProduct() {
     try {
       if (!formData.name || !formData.price || !formData.category) {
         setError('Please fill in all required fields')
+        setSubmitting(false)
+        return
+      }
+
+      if (images.length === 0) {
+        setError('Please upload at least one product image')
         setSubmitting(false)
         return
       }
@@ -117,7 +179,7 @@ export default function EditProduct() {
           stock: parseInt(formData.stock) || 0,
           colors: formData.colors.split(',').map((c) => c.trim()).filter(Boolean),
           types: formData.types.split(',').map((t) => t.trim()).filter(Boolean),
-          images: formData.images.split(',').map((i) => i.trim()).filter(Boolean),
+          images: images,
         }),
       })
 
@@ -272,17 +334,60 @@ export default function EditProduct() {
 
             {/* Images */}
             <div>
-              <Label htmlFor="images">Image URLs (comma-separated)</Label>
-              <Textarea
-                id="images"
-                name="images"
-                value={formData.images}
-                onChange={handleChange}
-                placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-                className="mt-1"
-                rows={3}
-                disabled={submitting}
-              />
+              <Label htmlFor="images">Product Images *</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-600 transition mt-1">
+                <input
+                  type="file"
+                  id="images"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  disabled={uploading}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="images"
+                  className={`cursor-pointer flex flex-col items-center gap-2 ${uploading ? 'opacity-50' : ''}`}
+                >
+                  <Upload className="w-6 h-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-600">
+                    {uploading ? 'Uploading...' : 'Click to upload or drag and drop'}
+                  </span>
+                  <span className="text-xs text-gray-500">PNG, JPG, WebP up to 10MB</span>
+                </label>
+              </div>
+
+              {/* Image Preview */}
+              {images.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2">Uploaded Images ({images.length})</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {images.map((image, index) => (
+                      <div key={index} className="relative group">
+                        <div className="w-full aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                          <img
+                            src={image}
+                            alt={`Product ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(index)}
+                          className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                        {index === 0 && (
+                          <div className="absolute top-1 left-1 bg-green-600 text-white px-2 py-1 rounded text-xs">
+                            Primary
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Buttons */}

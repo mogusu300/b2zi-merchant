@@ -25,9 +25,10 @@ interface CartItem {
 export default function Checkout() {
   const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -35,22 +36,34 @@ export default function Checkout() {
     city: '',
     state: '',
     zipCode: '',
+    phone: '',
+    whatsapp: '',
     cardNumber: '4242 4242 4242 4242',
     cardExpiry: '12/25',
     cardCVC: '123',
   })
 
   useEffect(() => {
+    // Check if user is authenticated
+    const customer = JSON.parse(localStorage.getItem('b2zi_user') || '{}')
+    if (!customer.id) {
+      router.push('/customers/register')
+      return
+    }
+
     // Get cart from localStorage
     const cart = JSON.parse(localStorage.getItem('b2zi_cart') || '[]')
-    setCartItems(cart)
+    if (!cart || cart.length === 0) {
+      router.push('/marketplace')
+      return
+    }
 
-    // Get customer email
-    const customer = JSON.parse(localStorage.getItem('b2zi_user') || '{}')
+    setCartItems(cart)
     if (customer.email) {
       setFormData((prev) => ({ ...prev, email: customer.email, name: customer.name }))
     }
-  }, [])
+    setLoading(false)
+  }, [router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -64,13 +77,19 @@ export default function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setIsProcessing(true)
     setError('')
 
     try {
       const customer = JSON.parse(localStorage.getItem('b2zi_user') || '{}')
       if (!customer.id) {
-        router.push('/customers/login')
+        setError('You must be logged in to place an order')
+        router.push('/customers/register')
+        return
+      }
+
+      if (!cartItems || cartItems.length === 0) {
+        setError('Your cart is empty')
         return
       }
 
@@ -88,14 +107,14 @@ export default function Checkout() {
             price: item.product?.price || 0,
           })),
           total,
-          shippingAddress: {
-            name: formData.name,
-            email: formData.email,
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            zipCode: formData.zipCode,
-          },
+          customerName: formData.name,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          customerWhatsApp: formData.whatsapp,
+          deliveryAddress: formData.address,
+          deliveryCity: formData.city,
+          deliveryState: formData.state,
+          deliveryZipCode: formData.zipCode,
           status: 'pending',
         }),
       })
@@ -119,8 +138,19 @@ export default function Checkout() {
       console.error('Checkout failed:', err)
       setError('An error occurred while processing your order')
     } finally {
-      setLoading(false)
+      setIsProcessing(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-[#2e3621] mb-4"></div>
+          <p className="text-gray-500 font-medium">Loading checkout...</p>
+        </div>
+      </div>
+    )
   }
 
   if (success) {
@@ -277,6 +307,44 @@ export default function Checkout() {
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleChange}
+                        className="mt-1"
+                        disabled={loading}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    We'll share these details with the seller for delivery coordination
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label htmlFor="phone">Phone Number *</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+1 (555) 000-0000"
+                        className="mt-1"
+                        disabled={loading}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="whatsapp">WhatsApp Number (Optional)</Label>
+                      <Input
+                        id="whatsapp"
+                        name="whatsapp"
+                        type="tel"
+                        value={formData.whatsapp}
+                        onChange={handleChange}
+                        placeholder="+1 (555) 000-0000"
                         className="mt-1"
                         disabled={loading}
                       />

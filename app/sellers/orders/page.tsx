@@ -33,6 +33,14 @@ interface OrderItem {
 interface Order {
   id: string
   customerId: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  customerWhatsApp?: string
+  deliveryAddress: string
+  deliveryCity: string
+  deliveryState: string
+  deliveryZipCode: string
   createdAt: string
   status: string
   total: number
@@ -153,6 +161,7 @@ export default function SellerOrders() {
                       <p className="text-sm text-gray-600">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </p>
+                      <p className="text-sm text-gray-600 mt-1">Customer: {order.customerName}</p>
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900">${order.total.toFixed(2)}</p>
@@ -178,22 +187,88 @@ export default function SellerOrders() {
 
                   {/* Expanded Details */}
                   {expandedOrder === order.id && (
-                    <div className="p-4 bg-gray-50 border-t">
-                      <h4 className="font-medium text-gray-900 mb-2">Order Items:</h4>
-                      <div className="space-y-2">
-                        {order.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="text-sm text-gray-600 flex justify-between"
-                          >
-                            <span>
-                              Product {item.productId} × {item.quantity}
-                              {item.selectedColor && ` (Color: ${item.selectedColor})`}
-                              {item.selectedType && ` (Type: ${item.selectedType})`}
-                            </span>
-                            <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <div className="p-4 bg-gray-50 border-t space-y-4">
+                      {/* Customer Information Section */}
+                      <div>
+                        <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                          <span>📦 Delivery Information</span>
+                        </h4>
+                        <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-2 text-sm">
+                          <div>
+                            <p className="text-gray-600">Recipient Name</p>
+                            <p className="font-medium text-gray-900">{order.customerName}</p>
                           </div>
-                        ))}
+                          <div>
+                            <p className="text-gray-600">Delivery Address</p>
+                            <p className="font-medium text-gray-900">
+                              {order.deliveryAddress}
+                            </p>
+                            <p className="text-gray-600 text-xs mt-1">
+                              {order.deliveryCity}, {order.deliveryState} {order.deliveryZipCode}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Contact Information Section */}
+                      <div>
+                        <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                          <span>📞 Contact Information</span>
+                        </h4>
+                        <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-gray-600">Phone</p>
+                              <p className="font-medium text-gray-900">{order.customerPhone}</p>
+                            </div>
+                            <a
+                              href={`tel:${order.customerPhone}`}
+                              className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded text-xs font-medium hover:bg-blue-200"
+                            >
+                              Call
+                            </a>
+                          </div>
+                          {order.customerWhatsApp && (
+                            <div className="flex items-center justify-between pt-2 border-t">
+                              <div>
+                                <p className="text-gray-600">WhatsApp</p>
+                                <p className="font-medium text-gray-900">{order.customerWhatsApp}</p>
+                              </div>
+                              <a
+                                href={`https://wa.me/${order.customerWhatsApp.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-3 py-1.5 bg-green-100 text-green-700 rounded text-xs font-medium hover:bg-green-200"
+                              >
+                                Chat
+                              </a>
+                            </div>
+                          )}
+                          <div className="pt-2 border-t">
+                            <p className="text-gray-600">Email</p>
+                            <p className="font-medium text-gray-900">{order.customerEmail}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Order Items Section */}
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">📦 Order Items:</h4>
+                        <div className="space-y-2">
+                          {order.items.map((item) => (
+                            <div
+                              key={item.id}
+                              className="text-sm text-gray-600 flex justify-between bg-white p-3 rounded border border-gray-200"
+                            >
+                              <span>
+                                Product {item.productId} × {item.quantity}
+                                {item.selectedColor && ` (Color: ${item.selectedColor})`}
+                                {item.selectedType && ` (Type: ${item.selectedType})`}
+                              </span>
+                              <span className="font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}

@@ -21,13 +21,27 @@ interface OrderItem {
   selectedColor?: string
   selectedType?: string
   price: number
+  product?: {
+    id: string
+    name: string
+    sellerName?: string
+    sellerId: string
+  }
 }
 
 interface Order {
   id: string
   customerId: string
+  customerName: string
+  customerPhone: string
+  deliveryAddress: string
+  deliveryCity: string
+  deliveryState: string
+  deliveryZipCode: string
   createdAt: string
   status: string
+  estimatedDelivery?: string
+  trackingNumber?: string
   total: number
   items: OrderItem[]
 }
@@ -49,13 +63,22 @@ export default function CustomerOrders() {
         }
 
         const customer = JSON.parse(customerData)
+        console.log('Fetching orders for customer:', customer.id, customer)
 
         const response = await fetch(`/api/customers/${customer.id}/orders`)
+        console.log('Orders response status:', response.status)
+        
         if (response.ok) {
           const data = await response.json()
+          console.log('Orders fetched:', data)
           setOrders(data)
+          setError('')
         } else if (response.status === 401) {
           router.push('/customers/login')
+        } else {
+          const errorData = await response.text()
+          console.error('Error response:', errorData)
+          setError('Failed to load orders')
         }
       } catch (err) {
         console.error('Failed to load orders:', err)
@@ -97,7 +120,8 @@ export default function CustomerOrders() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {error}
+            <p className="font-semibold">Error loading orders</p>
+            <p className="text-sm mt-2">{error}</p>
           </div>
         )}
 
@@ -105,7 +129,10 @@ export default function CustomerOrders() {
         <div className="space-y-4">
           {orders.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-gray-600 mb-4">You haven't placed any orders yet.</p>
+              <p className="text-gray-600 mb-2">No orders found.</p>
+              <p className="text-sm text-gray-500 mb-4">
+                Check browser console for debugging info
+              </p>
               <Link href="/marketplace">
                 <Button>Start Shopping</Button>
               </Link>
@@ -168,30 +195,90 @@ export default function CustomerOrders() {
 
                 {/* Expanded Details */}
                 {expandedOrder === order.id && (
-                  <div className="px-6 pb-6 bg-gray-50 border-t">
-                    <h3 className="font-semibold text-gray-900 mb-4">Order Items</h3>
-                    <div className="space-y-3">
-                      {order.items.map((item) => (
-                        <div key={item.id} className="flex justify-between text-sm">
-                          <div>
-                            <p className="text-gray-900">Product {item.productId}</p>
-                            <p className="text-gray-600">
-                              Qty: {item.quantity}
-                              {item.selectedColor && ` • Color: ${item.selectedColor}`}
-                              {item.selectedType && ` • Type: ${item.selectedType}`}
-                            </p>
-                          </div>
-                          <p className="font-medium text-gray-900">
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </p>
+                  <div className="px-6 pb-6 bg-gray-50 border-t space-y-6">
+                    {/* Order Status & Tracking */}
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📍 Order Status</h3>
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-gray-600">Status</span>
+                          <span
+                            className={`font-semibold px-3 py-1 rounded-full text-sm ${
+                              order.status === 'delivered'
+                                ? 'bg-green-100 text-green-700'
+                                : order.status === 'shipped'
+                                  ? 'bg-blue-100 text-blue-700'
+                                  : order.status === 'processing'
+                                    ? 'bg-yellow-100 text-yellow-700'
+                                    : order.status === 'cancelled'
+                                      ? 'bg-red-100 text-red-700'
+                                      : 'bg-gray-100 text-gray-700'
+                            }`}
+                          >
+                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          </span>
                         </div>
-                      ))}
+                        {order.trackingNumber && (
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-600">Tracking Number</span>
+                            <span className="font-medium text-gray-900">{order.trackingNumber}</span>
+                          </div>
+                        )}
+                        {order.estimatedDelivery && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">Est. Delivery</span>
+                            <span className="font-medium text-gray-900">
+                              {new Date(order.estimatedDelivery).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t">
-                      <div className="flex justify-between font-semibold">
-                        <span>Total</span>
-                        <span>${order.total.toFixed(2)}</span>
+                    {/* Delivery Address */}
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📦 Delivery Address</h3>
+                      <div className="bg-white p-4 rounded-lg border border-gray-200 text-sm">
+                        <p className="font-medium text-gray-900 mb-1">{order.customerName}</p>
+                        <p className="text-gray-600">{order.deliveryAddress}</p>
+                        <p className="text-gray-600">
+                          {order.deliveryCity}, {order.deliveryState} {order.deliveryZipCode}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Order Items - Grouped by Seller */}
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📦 Order Items</h3>
+                      <div className="space-y-4">
+                        {order.items.map((item) => (
+                          <div key={item.id} className="bg-white p-4 rounded-lg border border-gray-200">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-900">{item.product?.name || `Product ${item.productId}`}</p>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  Qty: {item.quantity}
+                                  {item.selectedColor && ` • Color: ${item.selectedColor}`}
+                                  {item.selectedType && ` • Type: ${item.selectedType}`}
+                                </p>
+                                {item.product?.sellerName && (
+                                  <p className="text-xs text-gray-500 mt-2">Sold by: {item.product.sellerName}</p>
+                                )}
+                              </div>
+                              <p className="font-semibold text-gray-900 ml-4">
+                                ${(item.price * item.quantity).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Order Total */}
+                    <div className="bg-white p-4 rounded-lg border border-gray-200">
+                      <div className="flex justify-between font-semibold text-lg">
+                        <span className="text-gray-900">Total</span>
+                        <span className="text-gray-900">${order.total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Search, 
   CheckCircle, 
@@ -18,12 +19,15 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  AlertCircle,
+  Loader2
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import AdminBackground from '@/app/admin-background'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,6 +95,8 @@ function DetailModal({
 }) {
   const [showDocuments, setShowDocuments] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [imageErrors, setImageErrors] = useState<{ front: boolean; back: boolean }>({ front: false, back: false })
+  const [imagesLoading, setImagesLoading] = useState<{ front: boolean; back: boolean }>({ front: false, back: false })
 
   if (!merchant) return null
 
@@ -104,6 +110,60 @@ function DetailModal({
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleImageError = (type: 'front' | 'back') => {
+    console.error(`Failed to load ${type} ID image:`, type === 'front' ? merchant.idFrontUrl : merchant.idBackUrl)
+    setImageErrors(prev => ({ ...prev, [type]: true }))
+  }
+
+  const handleImageLoad = (type: 'front' | 'back') => {
+    setImagesLoading(prev => ({ ...prev, [type]: false }))
+  }
+
+  const DocumentImage = ({ url, label, type }: { url: string; label: string; type: 'front' | 'back' }) => {
+    const hasError = imageErrors[type]
+    const isLoading = imagesLoading[type]
+
+    return (
+      <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white shadow-md">
+        {hasError ? (
+          <div className="w-full h-80 bg-gray-100 flex flex-col items-center justify-center gap-3">
+            <AlertCircle className="h-12 w-12 text-red-500" />
+            <div className="text-center">
+              <p className="text-sm font-semibold text-red-600">Image Failed to Load</p>
+              <p className="text-xs text-gray-600 mt-1">URL: {url}</p>
+              <button
+                onClick={() => {
+                  setImageErrors(prev => ({ ...prev, [type]: false }))
+                  setImagesLoading(prev => ({ ...prev, [type]: true }))
+                }}
+                className="mt-3 text-xs text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {isLoading && (
+              <div className="w-full h-80 bg-gray-100 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+              </div>
+            )}
+            <img
+              src={url}
+              alt={label}
+              onLoad={() => handleImageLoad(type)}
+              onError={() => handleImageError(type)}
+              className={`w-full h-auto object-contain ${isLoading ? 'hidden' : 'block'}`}
+              style={{ maxHeight: '500px' }}
+            />
+          </>
+        )}
+        <p className="text-sm text-center font-semibold text-gray-700 p-3 bg-gray-50 border-t">{label}</p>
+      </div>
+    )
   }
 
   return (
@@ -171,26 +231,18 @@ function DetailModal({
               {showDocuments && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   {merchant.idFrontUrl && (
-                    <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white shadow-md">
-                      <img 
-                        src={merchant.idFrontUrl} 
-                        alt="ID Front"
-                        className="w-full h-auto object-contain"
-                        style={{ maxHeight: '500px' }}
-                      />
-                      <p className="text-sm text-center font-semibold text-gray-700 p-3 bg-gray-50 border-t">ID Front / NRC / Passport Front</p>
-                    </div>
+                    <DocumentImage 
+                      url={merchant.idFrontUrl}
+                      label="ID Front / NRC / Passport Front"
+                      type="front"
+                    />
                   )}
                   {merchant.idBackUrl && (
-                    <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white shadow-md">
-                      <img 
-                        src={merchant.idBackUrl} 
-                        alt="ID Back"
-                        className="w-full h-auto object-contain"
-                        style={{ maxHeight: '500px' }}
-                      />
-                      <p className="text-sm text-center font-semibold text-gray-700 p-3 bg-gray-50 border-t">ID Back / NRC / Passport Back</p>
-                    </div>
+                    <DocumentImage 
+                      url={merchant.idBackUrl}
+                      label="ID Back / NRC / Passport Back"
+                      type="back"
+                    />
                   )}
                 </div>
               )}
@@ -402,7 +454,13 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+    <div className="min-h-screen relative overflow-hidden bg-white flex flex-col md:flex-row">
+      {/* Background SVG */}
+      <div className="fixed inset-0 -z-20">
+        <AdminBackground />
+      </div>
+      <div className="fixed inset-0 bg-gradient-to-br from-white/85 to-white/90 -z-10" />
+
       {/* Desktop Sidebar */}
       <div className="hidden md:block w-64 h-screen overflow-y-auto fixed left-0 top-0 border-r border-slate-700">
         <Sidebar isOpen={false} onClose={() => setSidebarOpen(false)} />
@@ -462,6 +520,59 @@ export default function AdminPage() {
                   </div>
                 </Card>
               ))}
+            </div>
+
+            {/* Info Banner with Illustration */}
+            <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-2xl p-8 shadow-xl">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h2 className="text-3xl font-bold mb-4">Merchant Management Hub</h2>
+                  <p className="text-slate-200 mb-6">Efficiently manage merchant registrations, verify identities, and monitor marketplace activity from a single dashboard.</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <span>Real-time merchant verification status</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <span>Document review and management</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <span>Complete merchant profiles and analytics</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="hidden md:block relative h-[300px] rounded-xl overflow-hidden opacity-90">
+                  <svg viewBox="0 0 400 300" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="adminGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#B1C98D', stopOpacity: 0.2 }} />
+                        <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.1 }} />
+                      </linearGradient>
+                    </defs>
+                    <rect width="400" height="300" fill="url(#adminGradient)" />
+                    {/* Dashboard monitor */}
+                    <rect x="80" y="40" width="240" height="160" fill="#B1C98D" opacity="0.3" rx="8" />
+                    <rect x="90" y="50" width="220" height="130" fill="#2E3621" opacity="0.2" rx="4" />
+                    {/* Screen elements - cards */}
+                    <rect x="100" y="65" width="50" height="40" fill="#B1C98D" opacity="0.4" rx="3" />
+                    <rect x="160" y="65" width="50" height="40" fill="#B1C98D" opacity="0.4" rx="3" />
+                    <rect x="220" y="65" width="50" height="40" fill="#B1C98D" opacity="0.4" rx="3" />
+                    {/* Chart bars */}
+                    <rect x="110" y="110" width="15" height="30" fill="#2E3621" opacity="0.4" />
+                    <rect x="135" y="100" width="15" height="40" fill="#2E3621" opacity="0.4" />
+                    <rect x="160" y="90" width="15" height="50" fill="#2E3621" opacity="0.4" />
+                    <rect x="185" y="95" width="15" height="45" fill="#2E3621" opacity="0.4" />
+                    {/* Stand */}
+                    <rect x="170" y="200" width="60" height="15" fill="#2E3621" opacity="0.3" rx="2" />
+                    <rect x="195" y="215" width="10" height="30" fill="#2E3621" opacity="0.3" />
+                    {/* Person at desk */}
+                    <circle cx="320" cy="160" r="15" fill="#B1C98D" opacity="0.4" />
+                    <rect x="310" y="175" width="20" height="35" fill="#2E3621" opacity="0.3" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Search and Filter */}

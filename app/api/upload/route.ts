@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
     if (!validTypes.includes(file.type)) {
       return NextResponse.json(
         { error: 'Invalid file type. Please upload JPEG, PNG, or WebP images only.' },
@@ -27,38 +30,46 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Implement actual file storage
-    // Options:
-    // 1. Vercel Blob: npm install @vercel/blob
-    //    import { put } from '@vercel/blob'
-    //    const blob = await put(file.name, file, { access: 'public' })
-    //    return NextResponse.json({ url: blob.url })
-    //
-    // 2. AWS S3: npm install @aws-sdk/client-s3
-    // 3. Cloudinary: npm install next-cloudinary
-    // 4. Local storage: Save to public folder
+    // Convert file to buffer
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
 
-    // For now, return a temporary URL that includes file name
-    // In production, implement one of the options above
+    // Generate unique filename
     const timestamp = Date.now()
     const randomId = Math.random().toString(36).substring(7)
-    const temporaryUrl = `/uploads/${timestamp}-${randomId}-${file.name}`
+    const extension = file.name.split('.').pop() || 'jpg'
+    const filename = `${timestamp}-${randomId}.${extension}`
+    
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = join(process.cwd(), 'public', 'uploads')
+    if (!existsSync(uploadsDir)) {
+      await mkdir(uploadsDir, { recursive: true })
+    }
 
-    console.log('[File Upload] File received:', {
+    // Save file to public/uploads directory
+    const filepath = join(uploadsDir, filename)
+    await writeFile(filepath, buffer)
+
+    // Return public URL
+    const url = `/uploads/${filename}`
+
+    console.log('[File Upload] File saved successfully:', {
       name: file.name,
       size: file.size,
       type: file.type,
-      temporaryUrl
+      filename,
+      url
     })
 
     return NextResponse.json({ 
-      url: temporaryUrl,
-      message: 'File upload successful. Implement actual storage in production.' 
+      url,
+      filename,
+      message: 'File uploaded successfully' 
     })
   } catch (error) {
     console.error('[File Upload] Error:', error)
     return NextResponse.json(
-      { error: 'Upload failed' },
+      { error: 'Upload failed: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     )
   }

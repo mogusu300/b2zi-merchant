@@ -4,10 +4,17 @@ import { ArrowRight, CheckCircle2, TrendingUp, Users, Sparkles, Store, Package, 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import HomeBackground from "@/app/home-background"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative overflow-hidden bg-white">
+      {/* Background SVG */}
+      <div className="fixed inset-0 -z-20">
+        <HomeBackground />
+      </div>
+      <div className="fixed inset-0 bg-gradient-to-br from-white/85 to-white/95 -z-10" />
+
       {/* Announcement Bar */}
       <div className="bg-primary text-primary-foreground animate-fade-in">
         <div className="container mx-auto px-4 py-3">
@@ -48,17 +55,6 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        {/* Background image layer */}
-        <div className="absolute inset-0 -z-20">
-          <img
-            src="/vibrant-african-marketplace-with-colorful-fresh-pr.jpg"
-            alt=""
-            className="w-full h-full object-cover opacity-20"
-          />
-        </div>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/40 via-background/95 to-background -z-10" />
-
         <div className="container mx-auto px-4 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
             <Badge

@@ -36,7 +36,19 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { customerId, items, total } = body
+    const {
+      customerId,
+      items,
+      total,
+      customerName,
+      customerEmail,
+      customerPhone,
+      customerWhatsApp,
+      deliveryAddress,
+      deliveryCity,
+      deliveryState,
+      deliveryZipCode,
+    } = body
 
     if (!customerId || !items || items.length === 0) {
       return NextResponse.json(
@@ -50,12 +62,22 @@ export async function POST(request: NextRequest) {
         customerId,
         total,
         status: 'pending',
+        customerName: customerName || '',
+        customerEmail: customerEmail || '',
+        customerPhone: customerPhone || '',
+        customerWhatsApp: customerWhatsApp || '',
+        deliveryAddress: deliveryAddress || '',
+        deliveryCity: deliveryCity || '',
+        deliveryState: deliveryState || '',
+        deliveryZipCode: deliveryZipCode || '',
         items: {
           create: items.map((item: any) => ({
             productId: item.productId,
             quantity: item.quantity,
-            selectedColor: item.selectedColor,
-            selectedType: item.selectedType,
+            variantData: {
+              selectedColor: item.selectedColor,
+              selectedType: item.selectedType,
+            },
             price: item.price,
           })),
         },

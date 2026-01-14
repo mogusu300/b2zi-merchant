@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import MerchantBackground from "./background"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -141,13 +142,9 @@ export default function RegisterPage() {
   const progress = (currentStep / 2) * 100
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-white">
       <div className="fixed inset-0 -z-20">
-        <img
-          src="/modern-african-storefront-shop-business-owner-zimb.jpg"
-          alt=""
-          className="w-full h-full object-cover"
-        />
+        <MerchantBackground />
       </div>
       <div className="fixed inset-0 bg-gradient-to-br from-background/95 via-background/90 to-secondary/30 -z-10" />
 
@@ -252,19 +249,46 @@ export default function RegisterPage() {
                       <benefit.icon className="h-6 w-6 text-accent transition-transform duration-300 group-hover:rotate-12" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-lg">{benefit.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
+                      <h4 className="font-semibold mb-1">{benefit.title}</h4>
+                      <p className="text-sm text-muted-foreground">{benefit.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <Card className="p-6 bg-muted/50 border-accent/20 animate-fade-in-up animation-delay-300 hover:border-accent transition-all duration-300 hover:shadow-lg">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground">Launch Bonus:</strong> The first 100 merchants to register will
-                  no monthly fees.
-                </p>
-              </Card>
+              {/* Illustration */}
+              <div className="hidden md:block relative h-[400px] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-accent/20 to-accent/10 border border-accent/20">
+                <svg viewBox="0 0 400 400" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="registerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#B1C98D', stopOpacity: 0.3 }} />
+                      <stop offset="100%" style={{ stopColor: '#2E3621', stopOpacity: 0.1 }} />
+                    </linearGradient>
+                  </defs>
+                  <rect width="400" height="400" fill="url(#registerGrad)" />
+                  {/* Team discussion illustration */}
+                  <circle cx="200" cy="100" r="80" fill="#B1C98D" opacity="0.2" />
+                  {/* Person 1 */}
+                  <circle cx="150" cy="180" r="20" fill="#2E3621" opacity="0.4" />
+                  <rect x="140" y="200" width="20" height="40" fill="#B1C98D" opacity="0.3" />
+                  <rect x="135" y="240" width="10" height="30" fill="#2E3621" opacity="0.3" />
+                  <rect x="145" y="240" width="10" height="30" fill="#2E3621" opacity="0.3" />
+                  
+                  {/* Person 2 */}
+                  <circle cx="200" cy="200" r="20" fill="#B1C98D" opacity="0.4" />
+                  <rect x="190" y="220" width="20" height="40" fill="#2E3621" opacity="0.3" />
+                  
+                  {/* Person 3 */}
+                  <circle cx="250" cy="180" r="20" fill="#2E3621" opacity="0.4" />
+                  <rect x="240" y="200" width="20" height="40" fill="#B1C98D" opacity="0.3" />
+                  <rect x="235" y="240" width="10" height="30" fill="#2E3621" opacity="0.3" />
+                  <rect x="245" y="240" width="10" height="30" fill="#2E3621" opacity="0.3" />
+                  
+                  {/* Store icon in background */}
+                  <path d="M 180 80 L 220 80 L 220 120 L 180 120 Z" fill="#B1C98D" opacity="0.2" />
+                  <rect x="190" y="100" width="20" height="20" fill="#2E3621" opacity="0.15" />
+                </svg>
+              </div>
             </div>
 
             <div className="animate-fade-in-up animation-delay-200">

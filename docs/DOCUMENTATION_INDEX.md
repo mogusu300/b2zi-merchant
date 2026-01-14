@@ -48,6 +48,28 @@ Welcome! This project now includes complete database integration with Prisma. He
 
 ---
 
+## 💾 SESSION MANAGEMENT
+
+### Session Features
+👉 **[SESSION_MANAGEMENT_COMPLETE.md](./SESSION_MANAGEMENT_COMPLETE.md)** - Comprehensive session system
+- User authentication session
+- Shopping cart persistence
+- User preferences tracking
+- Activity tracking
+- Favorites/wishlist system
+- Search history
+- Viewed products tracking
+
+### Quick Reference
+👉 **[SESSION_QUICK_REFERENCE.md](./SESSION_QUICK_REFERENCE.md)** - Developer quick start
+- Common tasks and examples
+- Storage keys reference
+- Activity tracking events
+- Debugging tips
+- Troubleshooting guide
+
+---
+
 ## ✅ TRACKING PROGRESS
 
 ### Implementation Checklist

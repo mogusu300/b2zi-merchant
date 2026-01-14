@@ -1,0 +1,193 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+export interface AuthUser {
+  id: string
+  email: string
+  type: 'merchant' | 'customer'
+  name?: string
+  businessName?: string
+}
+
+export interface AuthSession {
+  createdAt: string
+  expiresAt: string
+  ipAddress: string
+}
+
+export function useAuth() {
+  const router = useRouter()
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [session, setSession] = useState<AuthSession | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  // Check session on mount
+  useEffect(() => {
+    checkSession()
+  }, [])
+
+  const checkSession = useCallback(async () => {
+    try {
+      const response = await fetch('/api/auth/session')
+      const data = await response.json()
+
+      if (data.authenticated) {
+        setIsAuthenticated(true)
+        setUser(data.user)
+        setSession(data.session)
+      } else {
+        setIsAuthenticated(false)
+        setUser(null)
+        setSession(null)
+      }
+    } catch (error) {
+      console.error('Session check failed:', error)
+      setIsAuthenticated(false)
+      setUser(null)
+      setSession(null)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const login = useCallback(
+    async (email: string, password: string, type: 'merchant' | 'customer') => {
+      try {
+        const endpoint = type === 'merchant' 
+          ? '/api/merchant/login' 
+          : '/api/customers/login'
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Login failed')
+        }
+
+        // Update local state
+        const userData: AuthUser = {
+          id: type === 'merchant' ? data.merchant.id : data.customer.id,
+          email: type === 'merchant' ? data.merchant.email : data.customer.email,
+          type,
+          ...(type === 'merchant' 
+            ? { businessName: data.merchant.businessName, name: data.merchant.ownerName }
+            : { name: data.customer.name }
+          ),
+        }
+
+        setUser(userData)
+        setIsAuthenticated(true)
+
+        // Store token locally as backup (cookie is httpOnly)
+        if (data.token) {
+          localStorage.setItem('auth-token-backup', data.token)
+        }
+
+        return { success: true, user: userData }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Login failed'
+        return { success: false, error: message }
+      }
+    },
+    []
+  )
+
+  const logout = useCallback(async () => {
+    try {
+      const userType = user?.type || 'customer'
+      await fetch(
+        userType === 'merchant' 
+          ? '/api/merchant/logout' 
+          : '/api/customers/logout',
+        { method: 'POST' }
+      )
+
+      // Clear local state
+      setUser(null)
+      setSession(null)
+      setIsAuthenticated(false)
+      localStorage.removeItem('auth-token-backup')
+
+      // Redirect to home
+      router.push('/')
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }, [user?.type, router])
+
+  const register = useCallback(
+    async (data: any, type: 'merchant' | 'customer') => {
+      try {
+        const endpoint = type === 'merchant' 
+          ? '/api/register' 
+          : '/api/customers/register'
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+
+        const result = await response.json()
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Registration failed')
+        }
+
+        return { success: true, message: result.message }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Registration failed'
+        return { success: false, error: message }
+      }
+    },
+    []
+  )
+
+  return {
+    user,
+    session,
+    isLoading,
+    isAuthenticated,
+    checkSession,
+    login,
+    logout,
+    register,
+  }
+}
+
+/**
+ * Hook to protect routes - redirects if not authenticated
+ */
+export function useProtectedRoute(requiredType?: 'merchant' | 'customer') {
+  const router = useRouter()
+  const { user, isLoading, isAuthenticated } = useAuth()
+
+  useEffect(() => {
+    if (isLoading) return
+
+    if (!isAuthenticated) {
+      const redirectPath = requiredType === 'merchant' 
+        ? '/sellers/login' 
+        : '/customers/login'
+      router.push(redirectPath)
+      return
+    }
+
+    if (requiredType && user?.type !== requiredType) {
+      const redirectPath = user?.type === 'merchant' 
+        ? '/sellers/dashboard' 
+        : '/marketplace'
+      router.push(redirectPath)
+    }
+  }, [isLoading, isAuthenticated, user, requiredType, router])
+
+  return { user, isLoading }
+}
