@@ -4,35 +4,74 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated to exact brand colors from palette */
-  --background: 255 255 255;
-  --foreground: 0 0 0;
-  --card: 255 255 255;
-  --card-foreground: 0 0 0;
-  --popover: 255 255 255;
-  --popover-foreground: 0 0 0;
+  /* UIREWORK Design System - Brand Colors & Status Tokens */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
 
-  /* Dark olive green as primary */
-  --primary: 46 54 33;
-  --primary-foreground: 255 255 255;
+  /* Brand Colors: Dark Olive Green (#2E3621) & Sage Green (#B1C98D) */
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
 
-  /* Sage green as secondary */
-  --secondary: 177 201 141;
-  --secondary-foreground: 46 54 33;
+  /* Status Colors: Brand-aligned */
+  --status-pending: oklch(0.634 0.208 57.5);
+  --status-pending-bg: oklch(0.956 0.035 57.5);
+  --status-approved: oklch(0.445 0.18 142);
+  --status-approved-bg: oklch(0.922 0.046 142);
+  --status-ready: oklch(0.47 0.194 149.9);
+  --status-ready-bg: oklch(0.931 0.045 149.9);
+  --status-dispatched: oklch(0.638 0.157 200.1);
+  --status-dispatched-bg: oklch(0.936 0.035 200.1);
+  --status-transit: oklch(0.546 0.181 275.4);
+  --status-transit-bg: oklch(0.938 0.04 275.4);
+  --status-delivered: oklch(0.47 0.194 149.9);
+  --status-delivered-bg: oklch(0.931 0.045 149.9);
+  --status-rejected: oklch(0.577 0.245 27.325);
+  --status-rejected-bg: oklch(0.956 0.032 27.325);
+  --status-cancelled: oklch(0.556 0.028 0);
+  --status-cancelled-bg: oklch(0.936 0.013 0);
 
-  --muted: 245 245 245;
-  --muted-foreground: 107 107 107;
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.205 0 0);
 
-  /* Sage green for accents */
-  --accent: 177 201 141;
-  --accent-foreground: 46 54 33;
+  /* Typography Scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
 
-  --destructive: 239 68 68;
-  --destructive-foreground: 255 255 255;
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 2.5rem;
+  --space-3xl: 3rem;
+  --space-4xl: 4rem;
 
-  --border: 229 229 229;
-  --input: 229 229 229;
-  --ring: 177 201 141;
+  /* Shadow System */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
 
   --radius: 0.75rem;
   --chart-1: oklch(0.646 0.222 41.116);
@@ -51,26 +90,44 @@
 }
 
 .dark {
-  /* Dark mode with brand colors in RGB format */
-  --background: 26 26 26;
-  --foreground: 255 255 255;
-  --card: 46 54 33;
-  --card-foreground: 255 255 255;
-  --popover: 46 54 33;
-  --popover-foreground: 255 255 255;
-  --primary: 177 201 141;
-  --primary-foreground: 46 54 33;
-  --secondary: 46 54 33;
-  --secondary-foreground: 177 201 141;
-  --muted: 61 74 43;
-  --muted-foreground: 177 201 141;
-  --accent: 177 201 141;
-  --accent-foreground: 46 54 33;
-  --destructive: 220 38 38;
-  --destructive-foreground: 255 255 255;
-  --border: 61 74 43;
-  --input: 61 74 43;
-  --ring: 177 201 141;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  /* Status colors for dark mode */
+  --status-pending: oklch(0.856 0.117 57.5);
+  --status-pending-bg: oklch(0.252 0.042 57.5);
+  --status-approved: oklch(0.756 0.157 142);
+  --status-approved-bg: oklch(0.251 0.046 142);
+  --status-ready: oklch(0.788 0.157 149.9);
+  --status-ready-bg: oklch(0.251 0.055 149.9);
+  --status-dispatched: oklch(0.806 0.147 200.1);
+  --status-dispatched-bg: oklch(0.251 0.04 200.1);
+  --status-transit: oklch(0.766 0.166 275.4);
+  --status-transit-bg: oklch(0.252 0.051 275.4);
+  --status-delivered: oklch(0.788 0.157 149.9);
+  --status-delivered-bg: oklch(0.251 0.055 149.9);
+  --status-rejected: oklch(0.637 0.237 25.331);
+  --status-rejected-bg: oklch(0.252 0.067 25.331);
+  --status-cancelled: oklch(0.608 0.008 0);
+  --status-cancelled-bg: oklch(0.251 0.017 0);
+
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.785 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -89,32 +146,46 @@
 @theme inline {
   --font-sans: "Geist", "Geist Fallback";
   --font-mono: "Geist Mono", "Geist Mono Fallback";
-
-  /* Fixed color definitions to use RGB values directly */
-  --color-background: rgb(var(--background));
-  --color-foreground: rgb(var(--foreground));
-  --color-card: rgb(var(--card));
-  --color-card-foreground: rgb(var(--card-foreground));
-  --color-popover: rgb(var(--popover));
-  --color-popover-foreground: rgb(var(--popover-foreground));
-  --color-primary: rgb(var(--primary));
-  --color-primary-foreground: rgb(var(--primary-foreground));
-  --color-secondary: rgb(var(--secondary));
-  --color-secondary-foreground: rgb(var(--secondary-foreground));
-  --color-muted: rgb(var(--muted));
-  --color-muted-foreground: rgb(var(--muted-foreground));
-  --color-accent: rgb(var(--accent));
-  --color-accent-foreground: rgb(var(--accent-foreground));
-  --color-destructive: rgb(var(--destructive));
-  --color-destructive-foreground: rgb(var(--destructive-foreground));
-  --color-border: rgb(var(--border));
-  --color-input: rgb(var(--input));
-  --color-ring: rgb(var(--ring));
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-status-pending: var(--status-pending);
+  --color-status-pending-bg: var(--status-pending-bg);
+  --color-status-approved: var(--status-approved);
+  --color-status-approved-bg: var(--status-approved-bg);
+  --color-status-ready: var(--status-ready);
+  --color-status-ready-bg: var(--status-ready-bg);
+  --color-status-dispatched: var(--status-dispatched);
+  --color-status-dispatched-bg: var(--status-dispatched-bg);
+  --color-status-transit: var(--status-transit);
+  --color-status-transit-bg: var(--status-transit-bg);
+  --color-status-delivered: var(--status-delivered);
+  --color-status-delivered-bg: var(--status-delivered-bg);
+  --color-status-rejected: var(--status-rejected);
+  --color-status-rejected-bg: var(--status-rejected-bg);
+  --color-status-cancelled: var(--status-cancelled);
+  --color-status-cancelled-bg: var(--status-cancelled-bg);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -135,6 +206,26 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Typography hierarchy */
+  h1 {
+    @apply text-4xl font-bold leading-tight tracking-tight;
+  }
+  h2 {
+    @apply text-3xl font-bold leading-tight;
+  }
+  h3 {
+    @apply text-2xl font-semibold leading-snug;
+  }
+  h4 {
+    @apply text-xl font-semibold;
+  }
+  h5 {
+    @apply text-lg font-semibold;
+  }
+  h6 {
+    @apply text-base font-semibold;
   }
 
   /* Custom animations for smooth, lively interactions */

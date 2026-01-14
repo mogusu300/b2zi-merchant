@@ -42,38 +42,33 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className="h-full flex flex-col bg-background rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:border-primary/50 group cursor-pointer"
+        className="h-full flex flex-col bg-background rounded-xl overflow-hidden border border-border transition-all duration-300 hover:border-primary/60 hover:shadow-md group cursor-pointer"
         onClick={() => onProductClick(product)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Image Section - Cleaner, with better badge placement */}
+        {/* Image Section - Cleaner image with refined hover effect */}
         <div className="relative overflow-hidden bg-secondary aspect-square flex-shrink-0">
           <img
             src={product.images[0] || "/placeholder.svg"}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
 
-          {/* Overlay gradient on hover */}
-          {isHovered && <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />}
-
           {/* Stock Badge - Top right corner */}
-          <div className="absolute top-4 right-4 flex items-center gap-2">
+          <div className="absolute top-3 right-3">
             {product.inStock && (
-              <div className="bg-success text-background px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg">
-                <span className="w-1.5 h-1.5 bg-background rounded-full"></span>
+              <div className="bg-success text-background px-2.5 py-1 rounded-md text-xs font-semibold flex items-center gap-1 shadow-sm">
+                <span className="w-1 h-1 bg-background rounded-full"></span>
                 In Stock
               </div>
             )}
           </div>
 
-          {/* Out of Stock Overlay */}
+          {/* Out of Stock Overlay - Cleaner overlay without blur */}
           {!product.inStock && (
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-white font-semibold text-base">Out of Stock</p>
-              </div>
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <p className="text-white font-semibold text-sm">Out of Stock</p>
             </div>
           )}
 
@@ -83,25 +78,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               e.stopPropagation()
               onToggleFavorite?.(product.id)
             }}
-            className="absolute top-4 left-4 p-2.5 bg-background rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200"
+            className="absolute top-3 left-3 p-2 bg-background rounded-lg shadow-sm hover:shadow-md hover:scale-110 transition-all duration-200"
           >
             <Heart
-              className={`w-5 h-5 transition-all ${
-                isFavorited ? "fill-accent text-accent scale-125" : "text-muted-foreground"
+              className={`w-4 h-4 transition-all ${
+                isFavorited ? "fill-accent text-accent" : "text-muted-foreground hover:text-foreground"
               }`}
             />
           </button>
 
-          {/* Color Swatches - Bottom with better visibility */}
+          {/* Color Swatches - Bottom with cleaner styling */}
           {displayColors && displayColors.length > 0 && (
-            <div className="absolute bottom-4 left-4 flex gap-2 bg-background/90 backdrop-blur rounded-xl p-2.5 shadow-lg">
+            <div className="absolute bottom-3 left-3 flex gap-1.5 bg-background/95 rounded-lg p-2 shadow-sm">
               {displayColors.map((color, idx) => (
                 <div
                   key={idx}
-                  className="w-6 h-6 rounded-lg border-2 border-border cursor-pointer hover:border-primary transition-all duration-200 hover:scale-110"
+                  className="w-5 h-5 rounded-md border border-border cursor-pointer hover:border-primary/70 transition-all duration-200 hover:scale-110"
                   style={{
                     backgroundColor: color.toLowerCase(),
-                    ...(color.toLowerCase() === "white" && { backgroundColor: "#ffffff", borderColor: "#e5e7eb" }),
+                    ...(color.toLowerCase() === "white" && { backgroundColor: "#ffffff", borderColor: "#d1d5db" }),
                   }}
                   title={color}
                   onClick={(e) => {
@@ -110,7 +105,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 />
               ))}
               {totalColors > 5 && (
-                <div className="w-6 h-6 rounded-lg bg-secondary flex items-center justify-center text-xs font-bold text-muted-foreground border border-border">
+                <div className="w-5 h-5 rounded-md bg-secondary/80 flex items-center justify-center text-xs font-bold text-muted-foreground border border-border">
                   +{totalColors - 5}
                 </div>
               )}
@@ -118,11 +113,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Content Section - Better spacing and typography */}
-        <div className="p-4 flex flex-col flex-grow">
+        {/* Content Section - Better spacing, cleaner typography */}
+        <div className="p-3.5 flex flex-col flex-grow">
           {/* Category Badge */}
-          <div className="mb-2.5">
-            <span className="inline-block px-2.5 py-1 bg-primary/10 text-primary rounded-lg text-xs font-semibold">
+          <div className="mb-2">
+            <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary rounded-md text-xs font-semibold tracking-wide">
               {product.category}
             </span>
           </div>
@@ -134,51 +129,49 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Rating */}
           {product.rating && (
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center gap-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-3.5 h-3.5 ${
-                      i < Math.floor(product.rating!) ? "fill-accent text-accent" : "text-border"
-                    }`}
+                    className={`w-3 h-3 ${i < Math.floor(product.rating!) ? "fill-accent text-accent" : "text-border"}`}
                   />
                 ))}
               </div>
               <span className="text-xs text-muted-foreground font-medium">
                 {product.rating}
-                {product.reviews && <span className="text-border ml-1">({product.reviews})</span>}
+                {product.reviews && <span className="text-border ml-0.5">({product.reviews})</span>}
               </span>
             </div>
           )}
 
           {/* Price */}
-          <div className="mb-4 mt-auto">
-            <p className="text-2xl font-bold text-foreground">${currentPrice.toFixed(2)}</p>
+          <div className="mb-3 mt-auto">
+            <p className="text-xl font-bold text-foreground">${currentPrice.toFixed(2)}</p>
           </div>
 
           {/* Quantity and Button Section */}
           <div className="flex gap-2">
             {/* Quantity Controls */}
-            <div className="flex items-center border border-border rounded-lg bg-secondary/30">
+            <div className="flex items-center border border-border rounded-lg bg-secondary/50">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   setQuantity(Math.max(1, quantity - 1))
                 }}
-                className="p-1.5 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                className="p-1 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-3.5 h-3.5" />
               </button>
-              <span className="w-8 text-center text-sm font-medium">{quantity}</span>
+              <span className="w-6 text-center text-xs font-medium text-foreground">{quantity}</span>
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   setQuantity(quantity + 1)
                 }}
-                className="p-1.5 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                className="p-1 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3.5 h-3.5" />
               </button>
             </div>
 
@@ -186,13 +179,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className={`flex-1 py-2 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
+              className={`flex-1 py-1.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 ${
                 product.inStock
                   ? "bg-primary text-background hover:bg-primary/90 shadow-sm hover:shadow-md active:scale-95"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               }`}
             >
-              <ShoppingCart className="w-4 h-4" />
+              <ShoppingCart className="w-3.5 h-3.5" />
+              Add
             </button>
           </div>
         </div>
