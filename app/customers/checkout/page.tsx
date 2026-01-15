@@ -144,10 +144,10 @@ export default function Checkout() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-secondary">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-[#2e3621] mb-4"></div>
-          <p className="text-gray-500 font-medium">Loading checkout...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-primary mb-4"></div>
+          <p className="text-muted-foreground font-medium">Loading checkout...</p>
         </div>
       </div>
     )
@@ -155,30 +155,30 @@ export default function Checkout() {
 
   if (success) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-secondary">
         <Card className="p-8 text-center max-w-md">
           <div className="mb-4">
             <div className="flex justify-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Order Placed!</h2>
-          <p className="text-gray-600 mb-4">Thank you for your order. Redirecting...</p>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Order Placed!</h2>
+          <p className="text-muted-foreground mb-4">Thank you for your order. Redirecting...</p>
         </Card>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary">
       {/* Header */}
-      <div className="bg-white shadow">
+      <div className="bg-background border-b border-border shadow">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+          <h1 className="text-3xl font-bold text-foreground">Checkout</h1>
         </div>
       </div>
 
@@ -188,38 +188,38 @@ export default function Checkout() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
 
               <div className="space-y-4 mb-6">
                 {cartItems.map((item) => (
                   <div key={item.productId} className="flex justify-between text-sm">
                     <div>
-                      <p className="text-gray-900">{item.product?.name}</p>
-                      <p className="text-gray-600">Qty: {item.quantity}</p>
+                      <p className="text-foreground">{item.product?.name}</p>
+                      <p className="text-muted-foreground">Qty: {item.quantity}</p>
                     </div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-foreground">
                       ${((item.product?.price || 0) * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t pt-4">
+              <div className="border-t border-border pt-4">
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="text-gray-900">${total.toFixed(2)}</span>
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-foreground">${total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="text-gray-900">$10.00</span>
+                  <span className="text-muted-foreground">Shipping</span>
+                  <span className="text-foreground">$10.00</span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-gray-600">Tax</span>
-                  <span className="text-gray-900">${(total * 0.08).toFixed(2)}</span>
+                  <span className="text-muted-foreground">Tax</span>
+                  <span className="text-foreground">${(total * 0.08).toFixed(2)}</span>
                 </div>
-                <div className="border-t pt-4 flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span>${(total + 10 + total * 0.08).toFixed(2)}</span>
+                <div className="border-t border-border pt-4 flex justify-between font-bold text-lg">
+                  <span className="text-foreground">Total</span>
+                  <span className="text-foreground">${(total + 10 + total * 0.08).toFixed(2)}</span>
                 </div>
               </div>
             </Card>
@@ -230,14 +230,14 @@ export default function Checkout() {
             <Card className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                  <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive">
                     {error}
                   </div>
                 )}
 
                 {/* Shipping Address */}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Shipping Address</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-4">Shipping Address</h3>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -316,8 +316,8 @@ export default function Checkout() {
 
                 {/* Contact Information */}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Contact Information</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
                     We'll share these details with the seller for delivery coordination
                   </p>
 
@@ -354,8 +354,8 @@ export default function Checkout() {
 
                 {/* Payment Information */}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Payment Method</h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Payment Method</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
                     Test card: 4242 4242 4242 4242 (pre-filled)
                   </p>
 
@@ -410,7 +410,7 @@ export default function Checkout() {
                   <button
                     type="submit"
                     disabled={loading || cartItems.length === 0}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-success text-background rounded-lg font-medium hover:bg-success/90 disabled:opacity-50"
                   >
                     {loading ? 'Processing...' : 'Place Order'}
                   </button>
