@@ -104,8 +104,8 @@ export default function CustomersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Customers</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage your customer relationships and insights</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Customers</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage your customer relationships and insights</p>
         </div>
       </div>
 
@@ -113,47 +113,47 @@ export default function CustomersPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Customers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{customers.length}</div>
-            <p className="text-xs text-green-600 mt-1">From your orders</p>
+            <div className="text-2xl font-bold text-foreground">{customers.length}</div>
+            <p className="text-xs text-success mt-1">From your orders</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">
+            <div className="text-2xl font-bold text-foreground">
               ${customers.reduce((sum, c) => sum + c.totalSpent, 0).toFixed(2)}
             </div>
-            <p className="text-xs text-green-600 mt-1">From all customers</p>
+            <p className="text-xs text-success mt-1">From all customers</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Avg Order Value</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">
+            <div className="text-2xl font-bold text-foreground">
               $
               {customers.length > 0
                 ? (customers.reduce((sum, c) => sum + c.totalSpent, 0) / customers.length).toFixed(2)
                 : "0.00"}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Per customer</p>
+            <p className="text-xs text-muted-foreground mt-1">Per customer</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Repeat Customers</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Repeat Customers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">
+            <div className="text-2xl font-bold text-foreground">
               {customers.filter((c) => c.totalOrders > 1).length}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Placed multiple orders</p>
+            <p className="text-xs text-muted-foreground mt-1">Placed multiple orders</p>
           </CardContent>
         </Card>
       </div>
@@ -171,7 +171,7 @@ export default function CustomersPage() {
             <>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     placeholder="Search customers..."
                     value={searchQuery}
@@ -200,30 +200,30 @@ export default function CustomersPage() {
                         <TableRow key={customer.id}>
                           <TableCell>
                             <div>
-                              <div className="font-medium text-black">{customer.name}</div>
-                              <div className="text-sm text-gray-500 md:hidden">{customer.email}</div>
+                              <div className="font-medium text-foreground">{customer.name}</div>
+                              <div className="text-sm text-muted-foreground md:hidden">{customer.email}</div>
                             </div>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
                             <div className="flex items-center text-sm">
-                              <Mail className="w-3 h-3 mr-2 text-gray-400" />
+                              <Mail className="w-3 h-3 mr-2 text-muted-foreground" />
                               {customer.email}
                             </div>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end">
-                              <ShoppingBag className="w-4 h-4 mr-1 text-gray-400" />
+                              <ShoppingBag className="w-4 h-4 mr-1 text-muted-foreground" />
                               {customer.totalOrders}
                             </div>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end font-medium">
-                              <DollarSign className="w-4 h-4 text-green-600" />
+                              <DollarSign className="w-4 h-4 text-success" />
                               {customer.totalSpent.toFixed(2)}
                             </div>
                           </TableCell>
                           <TableCell className="hidden lg:table-cell">
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-muted-foreground">
                               {new Date(customer.lastOrder).toLocaleDateString()}
                             </div>
                           </TableCell>
@@ -236,7 +236,7 @@ export default function CustomersPage() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                           {customers.length === 0 ? "No customers yet" : "No customers found matching your search"}
                         </TableCell>
                       </TableRow>
