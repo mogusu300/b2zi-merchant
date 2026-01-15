@@ -22,15 +22,15 @@ interface OrderDetailPageProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending_approval: "bg-blue-50 border-blue-200 text-blue-900",
-  approved: "bg-green-50 border-green-200 text-green-900",
-  awaiting_payment: "bg-amber-50 border-amber-200 text-amber-900",
-  paid: "bg-emerald-50 border-emerald-200 text-emerald-900",
-  dispatched: "bg-orange-50 border-orange-200 text-orange-900",
-  in_transit: "bg-blue-50 border-blue-200 text-blue-900",
-  delivered: "bg-green-50 border-green-200 text-green-900",
-  rejected: "bg-red-50 border-red-200 text-red-900",
-  cancelled: "bg-gray-50 border-gray-200 text-gray-900",
+  pending_approval: "bg-primary/10 border-primary/30 text-foreground",
+  approved: "bg-success/10 border-success/30 text-foreground",
+  awaiting_payment: "bg-pending/10 border-pending/30 text-foreground",
+  paid: "bg-success/10 border-success/30 text-foreground",
+  dispatched: "bg-primary/10 border-primary/30 text-foreground",
+  in_transit: "bg-primary/10 border-primary/30 text-foreground",
+  delivered: "bg-success/10 border-success/30 text-foreground",
+  rejected: "bg-destructive/10 border-destructive/30 text-foreground",
+  cancelled: "bg-secondary border-border text-foreground",
 };
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
@@ -149,7 +149,7 @@ export default function OrderDetailPage() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full"
+          className="w-8 h-8 border-4 border-border border-t-primary rounded-full"
         />
       </div>
     );
@@ -160,23 +160,23 @@ export default function OrderDetailPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50 p-4"
+        className="min-h-screen bg-gradient-to-br from-destructive/10 to-destructive/20 p-4"
       >
         <div className="max-w-2xl mx-auto">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
 
-          <div className="bg-white rounded-lg border border-red-200 p-6">
+          <div className="bg-background rounded-lg border border-destructive/30 p-6">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-0.5" />
               <div>
-                <h2 className="font-semibold text-red-900 mb-1">Error</h2>
-                <p className="text-red-800">{error}</p>
+                <h2 className="font-semibold text-destructive mb-1">Error</h2>
+                <p className="text-destructive/80">{error}</p>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function OrderDetailPage() {
   if (!order) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600">Order not found</p>
+        <p className="text-muted-foreground">Order not found</p>
       </div>
     );
   }
@@ -200,7 +200,7 @@ export default function OrderDetailPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4"
+      className="min-h-screen bg-gradient-to-br from-secondary to-secondary/80 p-4"
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -212,12 +212,12 @@ export default function OrderDetailPage() {
           <div>
             <button
               onClick={() => router.back()}
-              className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-2"
+              className="flex items-center gap-2 text-primary hover:text-primary/80 mb-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Orders
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground">
               Order #{order.id.slice(0, 8)}
             </h1>
           </div>
@@ -238,10 +238,10 @@ export default function OrderDetailPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"
+            className="mb-6 bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-start gap-3"
           >
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{error}</p>
+            <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+            <p className="text-destructive/80">{error}</p>
           </motion.div>
         )}
 
@@ -253,22 +253,22 @@ export default function OrderDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+              className="bg-background rounded-lg border border-border shadow-sm p-6"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">
                 Order Information
               </h2>
 
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-gray-600">Order Date</p>
-                  <p className="font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Order Date</p>
+                  <p className="font-semibold text-foreground">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Total Amount</p>
-                  <p className="font-semibold text-gray-900 text-lg">
+                  <p className="text-sm text-muted-foreground">Total Amount</p>
+                  <p className="font-semibold text-foreground text-lg">
                     ${order.total.toFixed(2)}
                   </p>
                 </div>
@@ -280,9 +280,9 @@ export default function OrderDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+              className="bg-background rounded-lg border border-border shadow-sm p-6"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Package className="w-5 h-5" />
                 Items
               </h2>
@@ -294,20 +294,20 @@ export default function OrderDetailPage() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + index * 0.05 }}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                    className="flex items-center justify-between p-3 bg-secondary rounded-lg border border-border"
                   >
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-foreground">
                         {item.product?.name || "Product"}
                       </p>
                       {item.product?.seller && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                           by {item.product.seller.businessName}
                         </p>
                       )}
                       {item.variantData &&
                         typeof item.variantData === "object" && (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-muted-foreground">
                             {Object.entries(item.variantData)
                               .filter(([, v]) => v)
                               .map(([k, v]) => `${k}: ${v}`)
@@ -316,10 +316,10 @@ export default function OrderDetailPage() {
                         )}
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-foreground">
                         {item.quantity}x
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -333,22 +333,22 @@ export default function OrderDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+              className="bg-background rounded-lg border border-border shadow-sm p-6"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
                 Delivery Address
               </h2>
 
-              <p className="text-gray-900 font-semibold">
+              <p className="text-foreground font-semibold">
                 {order.customerName}
               </p>
-              <p className="text-gray-600">{order.deliveryAddress}</p>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">{order.deliveryAddress}</p>
+              <p className="text-muted-foreground">
                 {order.deliveryCity}, {order.deliveryState}{" "}
                 {order.deliveryZipCode}
               </p>
-              <p className="text-gray-600 mt-2">{order.customerPhone}</p>
+              <p className="text-muted-foreground mt-2">{order.customerPhone}</p>
             </motion.div>
 
             {/* Tracking Info (if dispatched) */}
@@ -357,17 +357,17 @@ export default function OrderDetailPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+                className="bg-background rounded-lg border border-border shadow-sm p-6"
               >
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                   <Truck className="w-5 h-5" />
                   Tracking Information
                 </h2>
 
                 {order.trackingNumber && (
                   <div className="mb-3">
-                    <p className="text-sm text-gray-600">Tracking Number</p>
-                    <p className="font-mono text-gray-900 font-semibold">
+                    <p className="text-sm text-muted-foreground">Tracking Number</p>
+                    <p className="font-mono text-foreground font-semibold">
                       {order.trackingNumber}
                     </p>
                   </div>
@@ -375,8 +375,8 @@ export default function OrderDetailPage() {
 
                 {order.driverName && (
                   <div className="mb-3">
-                    <p className="text-sm text-gray-600">Driver</p>
-                    <p className="font-semibold text-gray-900">
+                    <p className="text-sm text-muted-foreground">Driver</p>
+                    <p className="font-semibold text-foreground">
                       {order.driverName}
                       {order.driverPhone && ` - ${order.driverPhone}`}
                     </p>
@@ -385,8 +385,8 @@ export default function OrderDetailPage() {
 
                 {order.trackingMessage && (
                   <div>
-                    <p className="text-sm text-gray-600">Status</p>
-                    <p className="text-gray-900">{order.trackingMessage}</p>
+                    <p className="text-sm text-muted-foreground">Status</p>
+                    <p className="text-foreground">{order.trackingMessage}</p>
                   </div>
                 )}
               </motion.div>
@@ -397,9 +397,9 @@ export default function OrderDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+              className="bg-background rounded-lg border border-border shadow-sm p-6"
             >
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">
                 Order Timeline
               </h2>
               <OrderTimeline events={order.timeline || []} currentStatus={order.status} />
@@ -414,22 +414,22 @@ export default function OrderDetailPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg border-2 border-amber-200 shadow-sm p-6"
+                className="bg-gradient-to-br from-pending/10 to-pending/20 rounded-lg border-2 border-pending/30 shadow-sm p-6"
               >
-                <h3 className="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-pending mb-4 flex items-center gap-2">
                   <CreditCard className="w-5 h-5" />
                   Payment Required
                 </h3>
 
-                <div className="bg-white rounded-lg p-3 mb-4 border border-amber-100">
-                  <p className="text-sm text-gray-600">Total Due</p>
-                  <p className="text-2xl font-bold text-amber-900">
+                <div className="bg-background rounded-lg p-3 mb-4 border border-pending/20">
+                  <p className="text-sm text-muted-foreground">Total Due</p>
+                  <p className="text-2xl font-bold text-pending">
                     ${order.total.toFixed(2)}
                   </p>
                 </div>
 
                 <div className="space-y-3 mb-4">
-                  <label className="flex items-center gap-3 p-3 bg-white rounded-lg border-2 border-amber-200 cursor-pointer hover:bg-amber-50 transition-colors">
+                  <label className="flex items-center gap-3 p-3 bg-background rounded-lg border-2 border-pending/30 cursor-pointer hover:bg-pending/5 transition-colors">
                     <input
                       type="radio"
                       name="payment-method"
@@ -438,12 +438,12 @@ export default function OrderDetailPage() {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       Credit/Debit Card
                     </span>
                   </label>
 
-                  <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                  <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:bg-secondary transition-colors">
                     <input
                       type="radio"
                       name="payment-method"
@@ -452,12 +452,12 @@ export default function OrderDetailPage() {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       Bank Transfer
                     </span>
                   </label>
 
-                  <label className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
+                  <label className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border cursor-pointer hover:bg-secondary transition-colors">
                     <input
                       type="radio"
                       name="payment-method"
@@ -466,7 +466,7 @@ export default function OrderDetailPage() {
                       onChange={(e) => setPaymentMethod(e.target.value)}
                       className="w-4 h-4"
                     />
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-foreground">
                       Cash on Delivery
                     </span>
                   </label>
@@ -477,14 +477,14 @@ export default function OrderDetailPage() {
                   whileTap={{ scale: 0.98 }}
                   onClick={handlePayment}
                   disabled={paying}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 rounded-lg hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-pending to-pending/80 text-background font-semibold py-3 rounded-lg hover:from-pending/90 hover:to-pending/70 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                 >
                   {paying ? (
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity }}
-                        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                        className="w-4 h-4 border-2 border-background border-t-transparent rounded-full"
                       />
                       Processing...
                     </>
@@ -496,7 +496,7 @@ export default function OrderDetailPage() {
                   )}
                 </motion.button>
 
-                <p className="text-xs text-amber-800 text-center mt-3">
+                <p className="text-xs text-pending/80 text-center mt-3">
                   All payments are secure and encrypted
                 </p>
               </motion.div>
@@ -507,26 +507,26 @@ export default function OrderDetailPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-sm p-6"
+                className="bg-gradient-to-br from-success/10 to-success/20 rounded-lg border-2 border-success/30 shadow-sm p-6"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 200 }}
-                    className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center"
+                    className="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center"
                   >
-                    <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    <CheckCircle2 className="w-6 h-6 text-success" />
                   </motion.div>
-                  <h3 className="text-lg font-semibold text-green-900">
+                  <h3 className="text-lg font-semibold text-success">
                     Payment Received
                   </h3>
                 </div>
-                <p className="text-sm text-green-800">
+                <p className="text-sm text-success/80">
                   {new Date(order.paidAt).toLocaleDateString()} at{" "}
                   {new Date(order.paidAt).toLocaleTimeString()}
                 </p>
-                <p className="text-sm text-green-800 mt-1">
+                <p className="text-sm text-success/80 mt-1">
                   Method: {order.paymentMethod || "Not specified"}
                 </p>
               </motion.div>
@@ -537,9 +537,9 @@ export default function OrderDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm p-6"
+              className="bg-background rounded-lg border border-border shadow-sm p-6"
             >
-              <h3 className="font-semibold text-gray-900 mb-4">
+              <h3 className="font-semibold text-foreground mb-4">
                 Order Status
               </h3>
 
@@ -610,7 +610,7 @@ function StatusStep({
       <motion.div
         animate={{
           scale: active ? [1, 1.2, 1] : 1,
-          backgroundColor: completed ? "#10b981" : "#e5e7eb",
+          backgroundColor: completed ? "hsl(var(--success))" : "hsl(var(--border))",
         }}
         transition={{ duration: 0.5, repeat: active ? Infinity : 0 }}
         className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
@@ -619,15 +619,15 @@ function StatusStep({
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="w-3 h-3 bg-white rounded-full"
+            className="w-3 h-3 bg-background rounded-full"
           />
         )}
       </motion.div>
       <span
         className={`text-sm ${
           completed || active
-            ? "font-semibold text-gray-900"
-            : "text-gray-500"
+            ? "font-semibold text-foreground"
+            : "text-muted-foreground"
         }`}
       >
         {label}
