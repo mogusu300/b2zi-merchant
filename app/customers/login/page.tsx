@@ -87,12 +87,12 @@ export default function CustomerLoginPage() {
       </div>
       <div className="fixed inset-0 bg-gradient-to-br from-white/80 to-white/90 -z-10" />
 
-      <nav className="border-b border-gray-200 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 animate-slide-down">
+      <nav className="border-b border-border bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-slide-down">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/"
-              className="flex items-center gap-2 text-gray-700 hover:text-blue-700 transition-all duration-300 hover:translate-x-1"
+              className="flex items-center gap-2 text-foreground hover:text-primary transition-all duration-300 hover:translate-x-1"
             >
               <ArrowLeft className="h-5 w-5 transition-transform duration-300 hover:-translate-x-1" />
               <span className="font-semibold text-sm">Back to Home</span>
@@ -105,18 +105,18 @@ export default function CustomerLoginPage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left side - Benefits */}
-            <div className="space-y-8 text-gray-800">
+            <div className="space-y-8 text-foreground">
               <div className="animate-fade-in-up">
                 <Badge
-                  className="mb-4 bg-blue-100/70 text-blue-700 border-blue-300 animate-bounce-slow"
+                  className="mb-4 bg-primary/10 text-primary border-primary/30 animate-bounce-slow"
                   variant="outline"
                 >
                   Customer Portal
                 </Badge>
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance text-gray-900">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance text-foreground">
                   Welcome Back, Shopper!
                 </h1>
-                <p className="text-xl text-gray-700 leading-relaxed text-pretty">
+                <p className="text-xl text-muted-foreground leading-relaxed text-pretty">
                   Sign in to continue exploring thousands of amazing products from trusted sellers across Zimbabwe.
                 </p>
               </div>
@@ -144,45 +144,45 @@ export default function CustomerLoginPage() {
                     className="flex gap-4 animate-fade-in-up group hover:translate-x-2 transition-transform duration-300"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="flex-shrink-0 h-12 w-12 rounded-xl bg-blue-100/50 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-100 group-hover:scale-110 border border-blue-200">
-                      <benefit.icon className="h-6 w-6 text-blue-700 transition-transform duration-300 group-hover:rotate-12" />
+                    <div className="flex-shrink-0 h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:bg-primary/20 group-hover:scale-110 border border-primary/30">
+                      <benefit.icon className="h-6 w-6 text-primary transition-transform duration-300 group-hover:rotate-12" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1 text-lg text-gray-900">{benefit.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
+                      <h3 className="font-semibold mb-1 text-lg text-foreground">{benefit.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <Card className="p-6 bg-blue-50/60 border-blue-200 animate-fade-in-up animation-delay-300 hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  <strong className="text-blue-700">Tip:</strong> Sign in to save your favorites, track orders, and enjoy personalized recommendations.
+              <Card className="p-6 bg-primary/10 border-primary/30 animate-fade-in-up animation-delay-300 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+                <p className="text-sm text-foreground leading-relaxed">
+                  <strong className="text-primary">Tip:</strong> Sign in to save your favorites, track orders, and enjoy personalized recommendations.
                 </p>
               </Card>
             </div>
 
             {/* Right side - Login Form */}
             <div className="animate-fade-in-up animation-delay-200">
-              <Card className="p-8 md:p-10 shadow-2xl border border-blue-200 hover:shadow-2xl transition-shadow duration-500 bg-white/90 backdrop-blur hover:border-blue-400">
+              <Card className="p-8 md:p-10 shadow-2xl border border-primary/30 hover:shadow-2xl transition-shadow duration-500 bg-background/90 backdrop-blur hover:border-primary/50">
                 <div className="mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign In</h2>
-                  <p className="text-gray-600">Enter your credentials to access your account and continue shopping</p>
+                  <h2 className="text-3xl font-bold text-foreground mb-2">Sign In</h2>
+                  <p className="text-muted-foreground">Enter your credentials to access your account and continue shopping</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {errorMessage && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-red-700">{errorMessage}</p>
+                    <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg">
+                      <p className="text-sm text-destructive">{errorMessage}</p>
                     </div>
                   )}
 
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-base font-medium text-gray-900">
-                      Email Address <span className="text-red-500">*</span>
+                    <Label htmlFor="email" className="text-base font-medium text-foreground">
+                      Email Address <span className="text-destructive">*</span>
                     </Label>
                     <div className="relative group">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 transition-colors duration-300 group-focus-within:text-blue-600" />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors duration-300 group-focus-within:text-primary" />
                       <Input
                         id="email"
                         name="email"
@@ -190,7 +190,7 @@ export default function CustomerLoginPage() {
                         placeholder="your@email.com"
                         value={formData.email}
                         onChange={handleChange}
-                        className="pl-11 h-12 text-base bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all"
+                        className="pl-11 h-12 text-base bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all"
                         required
                         autoComplete="email"
                       />
@@ -198,11 +198,11 @@ export default function CustomerLoginPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-base font-medium text-gray-900">
-                      Password <span className="text-red-500">*</span>
+                    <Label htmlFor="password" className="text-base font-medium text-foreground">
+                      Password <span className="text-destructive">*</span>
                     </Label>
                     <div className="relative group">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 transition-colors duration-300 group-focus-within:text-blue-600" />
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors duration-300 group-focus-within:text-primary" />
                       <Input
                         id="password"
                         name="password"
@@ -210,7 +210,7 @@ export default function CustomerLoginPage() {
                         placeholder="Enter your password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="pl-11 h-12 text-base bg-white border border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all"
+                        className="pl-11 h-12 text-base bg-background border border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all"
                         required
                         autoComplete="current-password"
                       />
@@ -219,7 +219,7 @@ export default function CustomerLoginPage() {
 
                   <Button
                     type="submit"
-                    className="w-full h-12 text-base font-semibold bg-blue-700 hover:bg-blue-800 text-white transition-all"
+                    className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-background transition-all"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
@@ -236,16 +236,16 @@ export default function CustomerLoginPage() {
                   </Button>
                 </form>
 
-                <div className="mt-8 space-y-4 border-t border-gray-200 pt-8">
-                  <p className="text-center text-sm text-gray-600">
+                <div className="mt-8 space-y-4 border-t border-border pt-8">
+                  <p className="text-center text-sm text-muted-foreground">
                     Don't have an account?{" "}
-                    <Link href="/customers/register" className="text-blue-700 font-semibold hover:text-blue-800 transition-colors">
+                    <Link href="/customers/register" className="text-primary font-semibold hover:text-primary/80 transition-colors">
                       Create one now
                     </Link>
                   </p>
-                  <p className="text-center text-sm text-gray-600">
+                  <p className="text-center text-sm text-muted-foreground">
                     Are you a seller?{" "}
-                    <Link href="/sellers/login" className="text-blue-700 font-semibold hover:text-blue-800 transition-colors">
+                    <Link href="/sellers/login" className="text-primary font-semibold hover:text-primary/80 transition-colors">
                       Sign in here
                     </Link>
                   </p>
