@@ -27,30 +27,30 @@ const QUEUE_CONFIGS = {
   pending: {
     label: "Awaiting Approval",
     icon: <Clock className="w-5 h-5" />,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    borderColor: "border-primary/30",
   },
   awaiting_payment: {
     label: "Awaiting Payment",
     icon: <CreditCard className="w-5 h-5" />,
-    color: "text-amber-600",
-    bgColor: "bg-amber-50",
-    borderColor: "border-amber-200",
+    color: "text-pending",
+    bgColor: "bg-pending/10",
+    borderColor: "border-pending/30",
   },
   paid: {
     label: "Ready to Dispatch",
     icon: <CheckCircle2 className="w-5 h-5" />,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
+    color: "text-success",
+    bgColor: "bg-success/10",
+    borderColor: "border-success/30",
   },
   dispatched: {
     label: "In Transit",
     icon: <Truck className="w-5 h-5" />,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
+    borderColor: "border-accent/30",
   },
 };
 
@@ -129,24 +129,24 @@ export default function SellerApprovalDashboard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100"
+      className="min-h-screen bg-gradient-to-br from-secondary/30 to-secondary/50"
     >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm"
+        className="bg-background border-b border-border sticky top-0 z-10 shadow-sm"
       >
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground">
               Order Management
             </h1>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={fetchOrders}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-primary text-background rounded-lg hover:bg-primary/90 transition-colors"
             >
               Refresh
             </motion.button>
@@ -154,13 +154,13 @@ export default function SellerApprovalDashboard() {
 
           {/* Search */}
           <div className="flex-1 relative max-w-sm">
-            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search order ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
@@ -172,17 +172,17 @@ export default function SellerApprovalDashboard() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full"
+              className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full"
             />
           </div>
         ) : error ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"
+            className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-start gap-3"
           >
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{error}</p>
+            <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+            <p className="text-destructive">{error}</p>
           </motion.div>
         ) : orders.length === 0 ? (
           <motion.div
@@ -190,11 +190,11 @@ export default function SellerApprovalDashboard() {
             animate={{ opacity: 1 }}
             className="text-center py-12"
           >
-            <CheckCircle2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-xl font-semibold text-gray-600">
+            <CheckCircle2 className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+            <p className="text-xl font-semibold text-muted-foreground">
               No orders to manage
             </p>
-            <p className="text-gray-500 mt-2">All orders are up to date!</p>
+            <p className="text-muted-foreground mt-2">All orders are up to date!</p>
           </motion.div>
         ) : (
           <>
@@ -211,7 +211,7 @@ export default function SellerApprovalDashboard() {
                   className={`p-6 rounded-lg border-2 text-left transition-all ${
                     expandedQueue === queue.status
                       ? `${queue.bgColor} ${queue.borderColor} shadow-lg`
-                      : `bg-white border-gray-200 hover:shadow-md`
+                      : `bg-background border-border hover:shadow-md`
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -222,10 +222,10 @@ export default function SellerApprovalDashboard() {
                       }`}
                     />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                  <h3 className="font-semibold text-foreground mb-1">
                     {queue.label}
                   </h3>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-2xl font-bold text-foreground">
                     {queue.orders.length}
                   </p>
                 </motion.button>
@@ -237,17 +237,17 @@ export default function SellerApprovalDashboard() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
+                className="bg-background rounded-lg border border-border shadow-sm overflow-hidden"
               >
                 {/* Queue Header */}
-                <div className={`${selectedQueue.bgColor} border-b border-gray-200 px-6 py-4`}>
+                <div className={`${selectedQueue.bgColor} border-b border-border px-6 py-4`}>
                   <div className="flex items-center gap-3 mb-2">
                     {selectedQueue.icon}
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-foreground">
                       {selectedQueue.label}
                     </h2>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {selectedQueue.orders.length}{" "}
                     {selectedQueue.orders.length === 1 ? "order" : "orders"} awaiting
                     action
@@ -255,7 +255,7 @@ export default function SellerApprovalDashboard() {
                 </div>
 
                 {/* Orders List */}
-                <div className="divide-y divide-gray-200">
+                <div className="divide-y divide-border">
                   {selectedQueue.orders.map((order, index) => (
                     <OrderQueueItem
                       key={order.id}
@@ -373,48 +373,48 @@ function OrderQueueItem({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: index * 0.05 }}
-      className="p-6 hover:bg-gray-50 transition-colors"
+      className="p-6 hover:bg-secondary/30 transition-colors"
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         {/* Order Info */}
         <div>
-          <p className="text-xs text-gray-600 font-semibold mb-1">ORDER ID</p>
-          <p className="font-mono text-sm font-semibold text-gray-900 break-all">
+          <p className="text-xs text-muted-foreground font-semibold mb-1">ORDER ID</p>
+          <p className="font-mono text-sm font-semibold text-foreground break-all">
             {order.id.slice(0, 12)}...
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {new Date(order.createdAt).toLocaleDateString()}
           </p>
         </div>
 
         {/* Customer Info */}
         <div>
-          <p className="text-xs text-gray-600 font-semibold mb-1">CUSTOMER</p>
-          <p className="font-semibold text-gray-900">{order.customerName}</p>
-          <p className="text-sm text-gray-600">{order.customerEmail}</p>
-          <p className="text-sm text-gray-600">{order.customerPhone}</p>
+          <p className="text-xs text-muted-foreground font-semibold mb-1">CUSTOMER</p>
+          <p className="font-semibold text-foreground">{order.customerName}</p>
+          <p className="text-sm text-muted-foreground">{order.customerEmail}</p>
+          <p className="text-sm text-muted-foreground">{order.customerPhone}</p>
         </div>
 
         {/* Order Details */}
         <div>
-          <p className="text-xs text-gray-600 font-semibold mb-1">ORDER TOTAL</p>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-xs text-muted-foreground font-semibold mb-1">ORDER TOTAL</p>
+          <p className="text-2xl font-bold text-foreground">
             ${order.total.toFixed(2)}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {order.items?.length || 0} items
           </p>
         </div>
       </div>
 
       {/* Items Preview */}
-      <div className="mb-4 max-h-24 overflow-y-auto bg-gray-50 rounded p-3">
-        <p className="text-xs font-semibold text-gray-600 mb-2">ITEMS:</p>
+      <div className="mb-4 max-h-24 overflow-y-auto bg-secondary/30 rounded p-3">
+        <p className="text-xs font-semibold text-muted-foreground mb-2">ITEMS:</p>
         <div className="space-y-1">
           {order.items?.map((item: any) => (
-            <div key={item.id} className="text-sm text-gray-700">
+            <div key={item.id} className="text-sm text-foreground">
               <span className="font-medium">{item.product?.name}</span>
-              <span className="text-gray-600"> × {item.quantity}</span>
+              <span className="text-muted-foreground"> × {item.quantity}</span>
             </div>
           ))}
         </div>
@@ -425,10 +425,10 @@ function OrderQueueItem({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2"
+          className="mb-4 bg-destructive/10 border border-destructive/30 rounded p-3 flex items-start gap-2"
         >
-          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-800">{error}</p>
+          <AlertCircle className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-destructive">{error}</p>
         </motion.div>
       )}
 
@@ -441,7 +441,7 @@ function OrderQueueItem({
               whileTap={{ scale: 0.95 }}
               onClick={handleApprove}
               disabled={actionLoading}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium text-sm transition-colors"
+              className="px-4 py-2 bg-success text-background rounded-lg hover:bg-success/90 disabled:opacity-50 font-medium text-sm transition-colors"
             >
               {actionLoading ? "Processing..." : "✓ Approve"}
             </motion.button>
@@ -450,7 +450,7 @@ function OrderQueueItem({
               whileTap={{ scale: 0.95 }}
               onClick={handleReject}
               disabled={actionLoading}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium text-sm transition-colors"
+              className="px-4 py-2 bg-destructive text-background rounded-lg hover:bg-destructive/90 disabled:opacity-50 font-medium text-sm transition-colors"
             >
               {actionLoading ? "Processing..." : "✗ Reject"}
             </motion.button>
@@ -463,7 +463,7 @@ function OrderQueueItem({
             whileTap={{ scale: 0.95 }}
             onClick={handleDispatch}
             disabled={actionLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium text-sm transition-colors"
+            className="px-4 py-2 bg-primary text-background rounded-lg hover:bg-primary/90 disabled:opacity-50 font-medium text-sm transition-colors"
           >
             {actionLoading ? "Processing..." : "📦 Dispatch"}
           </motion.button>
@@ -474,7 +474,7 @@ function OrderQueueItem({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => router.push(`/sellers/dashboard/orders/${order.id}`)}
-          className="px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 font-medium text-sm transition-colors"
+          className="px-4 py-2 bg-secondary text-foreground rounded-lg hover:bg-secondary/80 font-medium text-sm transition-colors"
         >
           View Details →
         </motion.button>
