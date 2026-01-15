@@ -489,7 +489,7 @@ export default function AdminPage() {
             </div>
             <Link 
               href="/" 
-              className="text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground hover:bg-secondary px-3 py-2 rounded-lg transition-colors"
             >
               ← Back Home
             </Link>
@@ -497,15 +497,15 @@ export default function AdminPage() {
         </header>
 
         {/* Page Content with separate scroll */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-secondary">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: 'Total Merchants', value: stats.total, color: 'from-blue-50 to-blue-100', textColor: 'text-blue-600', borderColor: 'border-blue-200', icon: '📊' },
-                { label: 'Pending Review', value: stats.pending, color: 'from-yellow-50 to-yellow-100', textColor: 'text-yellow-600', borderColor: 'border-yellow-200', icon: '⏳' },
-                { label: 'Approved', value: stats.approved, color: 'from-green-50 to-green-100', textColor: 'text-green-600', borderColor: 'border-green-200', icon: '✅' },
-                { label: 'Rejected', value: stats.rejected, color: 'from-red-50 to-red-100', textColor: 'text-red-600', borderColor: 'border-red-200', icon: '❌' },
+                { label: 'Total Merchants', value: stats.total, color: 'from-primary/10 to-primary/5', textColor: 'text-primary', borderColor: 'border-primary/30', icon: '📊' },
+                { label: 'Pending Review', value: stats.pending, color: 'from-pending/10 to-pending/5', textColor: 'text-pending', borderColor: 'border-pending/30', icon: '⏳' },
+                { label: 'Approved', value: stats.approved, color: 'from-success/10 to-success/5', textColor: 'text-success', borderColor: 'border-success/30', icon: '✅' },
+                { label: 'Rejected', value: stats.rejected, color: 'from-destructive/10 to-destructive/5', textColor: 'text-destructive', borderColor: 'border-destructive/30', icon: '❌' },
               ].map((stat) => (
                 <Card 
                   key={stat.label} 
@@ -513,7 +513,7 @@ export default function AdminPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-700 mb-2">{stat.label}</p>
+                      <p className="text-sm font-medium text-foreground mb-2">{stat.label}</p>
                       <p className={`text-4xl font-bold ${stat.textColor}`}>{stat.value}</p>
                     </div>
                     <span className="text-3xl opacity-50">{stat.icon}</span>
@@ -523,11 +523,11 @@ export default function AdminPage() {
             </div>
 
             {/* Info Banner with Illustration */}
-            <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-2xl p-8 shadow-xl">
+            <div className="bg-gradient-to-r from-foreground to-primary text-background rounded-2xl p-8 shadow-xl">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
                   <h2 className="text-3xl font-bold mb-4">Merchant Management Hub</h2>
-                  <p className="text-slate-200 mb-6">Efficiently manage merchant registrations, verify identities, and monitor marketplace activity from a single dashboard.</p>
+                  <p className="text-background/80 mb-6">Efficiently manage merchant registrations, verify identities, and monitor marketplace activity from a single dashboard.</p>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
