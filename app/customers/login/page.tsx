@@ -224,7 +224,7 @@ export default function CustomerLoginPage() {
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
-                        <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                         Signing In...
                       </div>
                     ) : (

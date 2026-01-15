@@ -67,7 +67,7 @@ export default function ProductVariantsPage() {
   }
 
   if (!product) {
-    return <div className="text-center py-12 text-red-600">{error}</div>
+    return <div className="text-center py-12 text-destructive">{error}</div>
   }
 
   return (
@@ -81,8 +81,8 @@ export default function ProductVariantsPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-black">Product Variants</h1>
-          <p className="text-gray-600 mt-1">{product.name} - Base Price: ${product.price.toFixed(2)}</p>
+          <h1 className="text-3xl font-bold text-foreground">Product Variants</h1>
+          <p className="text-muted-foreground mt-1">{product.name} - Base Price: ${product.price.toFixed(2)}</p>
         </div>
       </div>
 
@@ -96,11 +96,11 @@ export default function ProductVariantsPage() {
           <CardContent>
             <div className="space-y-4">
               {product.variantGroups.map((group, idx) => (
-                <div key={idx} className="p-4 border border-gray-200 rounded-lg">
+                <div key={idx} className="p-4 border border-border rounded-lg">
                   <h3 className="font-semibold text-lg mb-2">{group.name}</h3>
                   <div className="flex flex-wrap gap-2">
                     {group.values.map((value, vIdx) => (
-                      <span key={vIdx} className="px-3 py-1 bg-gray-100 rounded-full text-sm">
+                      <span key={vIdx} className="px-3 py-1 bg-secondary rounded-full text-sm">
                         {value}
                       </span>
                     ))}
@@ -123,7 +123,7 @@ export default function ProductVariantsPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
+                  <tr className="border-b border-border">
                     <th className="text-left py-2 px-4 font-semibold">Attributes</th>
                     <th className="text-left py-2 px-4 font-semibold">SKU</th>
                     <th className="text-left py-2 px-4 font-semibold">Price</th>
@@ -132,7 +132,7 @@ export default function ProductVariantsPage() {
                 </thead>
                 <tbody>
                   {product.variants.map((variant) => (
-                    <tr key={variant.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={variant.id} className="border-b border-border/50 hover:bg-secondary">
                       <td className="py-3 px-4">
                         {Object.entries(variant.attributes)
                           .map(([key, value]) => `${key}: ${value}`)
@@ -143,15 +143,15 @@ export default function ProductVariantsPage() {
                         {variant.price ? (
                           <span className="font-semibold">${variant.price.toFixed(2)}</span>
                         ) : (
-                          <span className="text-gray-500">Base (${product.price.toFixed(2)})</span>
+                          <span className="text-muted-foreground">Base (${product.price.toFixed(2)})</span>
                         )}
                       </td>
                       <td className="py-3 px-4">
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             variant.stock > 0
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                              ? "bg-success/10 text-success"
+                              : "bg-destructive/10 text-destructive"
                           }`}
                         >
                           {variant.stock}
@@ -168,8 +168,8 @@ export default function ProductVariantsPage() {
 
       {/* No Variants Message */}
       {(!product.variants || product.variants.length === 0) && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-          <p className="text-gray-600 mb-4">No variants configured for this product</p>
+        <div className="text-center py-12 bg-secondary rounded-lg border border-border">
+          <p className="text-muted-foreground mb-4">No variants configured for this product</p>
           <Link href={`/sellers/dashboard/products/edit?id=${product.id}`}>
             <Button className="bg-[#2e3621] hover:bg-black">
               <Plus className="w-4 h-4 mr-2" />
