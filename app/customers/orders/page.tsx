@@ -93,22 +93,22 @@ export default function CustomerOrders() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-secondary">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-          <p className="mt-4 text-gray-600">Loading your orders...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Loading your orders...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary">
       {/* Header */}
-      <div className="bg-white shadow">
+      <div className="bg-background shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+            <h1 className="text-3xl font-bold text-foreground">My Orders</h1>
             <Link href="/marketplace">
               <Button variant="outline">Continue Shopping</Button>
             </Link>
@@ -119,7 +119,7 @@ export default function CustomerOrders() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-4 p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive">
             <p className="font-semibold">Error loading orders</p>
             <p className="text-sm mt-2">{error}</p>
           </div>
@@ -129,8 +129,8 @@ export default function CustomerOrders() {
         <div className="space-y-4">
           {orders.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-gray-600 mb-2">No orders found.</p>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-muted-foreground mb-2">No orders found.</p>
+              <p className="text-sm text-muted-foreground mb-4">
                 Check browser console for debugging info
               </p>
               <Link href="/marketplace">
@@ -141,33 +141,33 @@ export default function CustomerOrders() {
             orders.map((order) => (
               <Card key={order.id} className="overflow-hidden">
                 <div
-                  className="p-6 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition"
+                  className="p-6 flex justify-between items-center cursor-pointer hover:bg-secondary/50 transition"
                   onClick={() =>
                     setExpandedOrder(expandedOrder === order.id ? null : order.id)
                   }
                 >
                   <div>
-                    <p className="font-semibold text-gray-900">
+                    <p className="font-semibold text-foreground">
                       Order #{order.id.slice(0, 8).toUpperCase()}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-muted-foreground">
                       Placed on {new Date(order.createdAt).toLocaleDateString()}
                     </p>
                   </div>
 
                   <div className="text-right">
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold text-foreground">
                       ${order.total.toFixed(2)}
                     </div>
                     <div
                       className={`text-sm font-medium ${
                         order.status === 'delivered'
-                          ? 'text-green-600'
+                          ? 'text-success'
                           : order.status === 'shipped'
-                            ? 'text-blue-600'
+                            ? 'text-primary'
                             : order.status === 'cancelled'
-                              ? 'text-red-600'
-                              : 'text-yellow-600'
+                              ? 'text-destructive'
+                              : 'text-pending'
                       }`}
                     >
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -176,7 +176,7 @@ export default function CustomerOrders() {
 
                   <div className="ml-4">
                     <svg
-                      className={`w-5 h-5 text-gray-400 transition transform ${
+                      className={`w-5 h-5 text-muted-foreground transition transform ${
                         expandedOrder === order.id ? 'rotate-180' : ''
                       }`}
                       fill="none"
@@ -195,24 +195,24 @@ export default function CustomerOrders() {
 
                 {/* Expanded Details */}
                 {expandedOrder === order.id && (
-                  <div className="px-6 pb-6 bg-gray-50 border-t space-y-6">
+                  <div className="px-6 pb-6 bg-secondary/50 border-t space-y-6">
                     {/* Order Status & Tracking */}
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📍 Order Status</h3>
-                      <div className="bg-white p-4 rounded-lg border border-gray-200">
+                      <h3 className="font-semibold text-foreground mb-3 text-lg">📍 Order Status</h3>
+                      <div className="bg-background p-4 rounded-lg border border-border">
                         <div className="flex items-center justify-between mb-3">
-                          <span className="text-gray-600">Status</span>
+                          <span className="text-muted-foreground">Status</span>
                           <span
                             className={`font-semibold px-3 py-1 rounded-full text-sm ${
                               order.status === 'delivered'
-                                ? 'bg-green-100 text-green-700'
+                                ? 'bg-success/10 text-success'
                                 : order.status === 'shipped'
-                                  ? 'bg-blue-100 text-blue-700'
+                                  ? 'bg-primary/10 text-primary'
                                   : order.status === 'processing'
-                                    ? 'bg-yellow-100 text-yellow-700'
+                                    ? 'bg-pending/10 text-pending'
                                     : order.status === 'cancelled'
-                                      ? 'bg-red-100 text-red-700'
-                                      : 'bg-gray-100 text-gray-700'
+                                      ? 'bg-destructive/10 text-destructive'
+                                      : 'bg-secondary text-muted-foreground'
                             }`}
                           >
                             {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
@@ -220,14 +220,14 @@ export default function CustomerOrders() {
                         </div>
                         {order.trackingNumber && (
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-gray-600">Tracking Number</span>
-                            <span className="font-medium text-gray-900">{order.trackingNumber}</span>
+                            <span className="text-muted-foreground">Tracking Number</span>
+                            <span className="font-medium text-foreground">{order.trackingNumber}</span>
                           </div>
                         )}
                         {order.estimatedDelivery && (
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-600">Est. Delivery</span>
-                            <span className="font-medium text-gray-900">
+                            <span className="text-muted-foreground">Est. Delivery</span>
+                            <span className="font-medium text-foreground">
                               {new Date(order.estimatedDelivery).toLocaleDateString()}
                             </span>
                           </div>
@@ -237,11 +237,11 @@ export default function CustomerOrders() {
 
                     {/* Delivery Address */}
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📦 Delivery Address</h3>
-                      <div className="bg-white p-4 rounded-lg border border-gray-200 text-sm">
-                        <p className="font-medium text-gray-900 mb-1">{order.customerName}</p>
-                        <p className="text-gray-600">{order.deliveryAddress}</p>
-                        <p className="text-gray-600">
+                      <h3 className="font-semibold text-foreground mb-3 text-lg">📦 Delivery Address</h3>
+                      <div className="bg-background p-4 rounded-lg border border-border text-sm">
+                        <p className="font-medium text-foreground mb-1">{order.customerName}</p>
+                        <p className="text-muted-foreground">{order.deliveryAddress}</p>
+                        <p className="text-muted-foreground">
                           {order.deliveryCity}, {order.deliveryState} {order.deliveryZipCode}
                         </p>
                       </div>
@@ -249,23 +249,23 @@ export default function CustomerOrders() {
 
                     {/* Order Items - Grouped by Seller */}
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-3 text-lg">📦 Order Items</h3>
+                      <h3 className="font-semibold text-foreground mb-3 text-lg">📦 Order Items</h3>
                       <div className="space-y-4">
                         {order.items.map((item) => (
-                          <div key={item.id} className="bg-white p-4 rounded-lg border border-gray-200">
+                          <div key={item.id} className="bg-background p-4 rounded-lg border border-border">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <p className="font-medium text-gray-900">{item.product?.name || `Product ${item.productId}`}</p>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="font-medium text-foreground">{item.product?.name || `Product ${item.productId}`}</p>
+                                <p className="text-sm text-muted-foreground mt-1">
                                   Qty: {item.quantity}
                                   {item.selectedColor && ` • Color: ${item.selectedColor}`}
                                   {item.selectedType && ` • Type: ${item.selectedType}`}
                                 </p>
                                 {item.product?.sellerName && (
-                                  <p className="text-xs text-gray-500 mt-2">Sold by: {item.product.sellerName}</p>
+                                  <p className="text-xs text-muted-foreground mt-2">Sold by: {item.product.sellerName}</p>
                                 )}
                               </div>
-                              <p className="font-semibold text-gray-900 ml-4">
+                              <p className="font-semibold text-foreground ml-4">
                                 ${(item.price * item.quantity).toFixed(2)}
                               </p>
                             </div>
@@ -275,10 +275,10 @@ export default function CustomerOrders() {
                     </div>
 
                     {/* Order Total */}
-                    <div className="bg-white p-4 rounded-lg border border-gray-200">
+                    <div className="bg-background p-4 rounded-lg border border-border">
                       <div className="flex justify-between font-semibold text-lg">
-                        <span className="text-gray-900">Total</span>
-                        <span className="text-gray-900">${order.total.toFixed(2)}</span>
+                        <span className="text-foreground">Total</span>
+                        <span className="text-foreground">${order.total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
