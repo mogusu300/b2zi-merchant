@@ -149,8 +149,8 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">Analytics</h1>
-          <p className="text-sm text-gray-600 mt-1">Track your store performance and insights</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Analytics</h1>
+          <p className="text-sm text-muted-foreground mt-1">Track your store performance and insights</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <Select defaultValue="7days">
@@ -173,13 +173,13 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
-              <DollarSign className="w-4 h-4 text-gray-400" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+              <DollarSign className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">${stats.totalRevenue.toFixed(2)}</div>
-            <div className="flex items-center text-sm text-green-600 mt-1">
+            <div className="text-2xl font-bold text-foreground">${stats.totalRevenue.toFixed(2)}</div>
+            <div className="flex items-center text-sm text-success mt-1">
               <TrendingUp className="w-4 h-4 mr-1" />
               <span>From all orders</span>
             </div>
@@ -189,13 +189,13 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Orders</CardTitle>
-              <ShoppingCart className="w-4 h-4 text-gray-400" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
+              <ShoppingCart className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{stats.totalOrders}</div>
-            <div className="flex items-center text-sm text-gray-500 mt-1">
+            <div className="text-2xl font-bold text-foreground">{stats.totalOrders}</div>
+            <div className="flex items-center text-sm text-muted-foreground mt-1">
               <span>Total orders received</span>
             </div>
           </CardContent>
@@ -204,13 +204,13 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">Avg Order Value</CardTitle>
-              <Package className="w-4 h-4 text-gray-400" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
+              <Package className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">${stats.avgOrderValue.toFixed(2)}</div>
-            <div className="flex items-center text-sm text-gray-500 mt-1">
+            <div className="text-2xl font-bold text-foreground">${stats.avgOrderValue.toFixed(2)}</div>
+            <div className="flex items-center text-sm text-muted-foreground mt-1">
               <span>Average per order</span>
             </div>
           </CardContent>
@@ -219,13 +219,13 @@ export default function AnalyticsPage() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">Products</CardTitle>
-              <Users className="w-4 h-4 text-gray-400" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Products</CardTitle>
+              <Users className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{categoryData.reduce((sum, c) => sum + c.value, 0)}</div>
-            <div className="flex items-center text-sm text-gray-500 mt-1">
+            <div className="text-2xl font-bold text-foreground">{categoryData.reduce((sum, c) => sum + c.value, 0)}</div>
+            <div className="flex items-center text-sm text-muted-foreground mt-1">
               <span>In your catalog</span>
             </div>
           </CardContent>
@@ -243,13 +243,13 @@ export default function AnalyticsPage() {
             {revenueData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="date" stroke="#888888" fontSize={12} />
-                  <YAxis stroke="#888888" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="date" stroke="#6b7280" fontSize={12} />
+                  <YAxis stroke="#6b7280" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #e5e7eb",
+                      backgroundColor: "var(--background)",
+                      border: "1px solid var(--border)",
                       borderRadius: "8px",
                     }}
                   />
@@ -257,23 +257,23 @@ export default function AnalyticsPage() {
                   <Line
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#4B8BBE"
+                    stroke="var(--primary)"
                     strokeWidth={2}
-                    dot={{ fill: "#4B8BBE", r: 4 }}
+                    dot={{ fill: "var(--primary)", r: 4 }}
                     name="Revenue ($)"
                   />
                   <Line
                     type="monotone"
                     dataKey="orders"
-                    stroke="#7C4DFF"
+                    stroke="var(--accent)"
                     strokeWidth={2}
-                    dot={{ fill: "#7C4DFF", r: 4 }}
+                    dot={{ fill: "var(--accent)", r: 4 }}
                     name="Orders"
                   />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-center py-12 text-gray-500">No data available</div>
+              <div className="text-center py-12 text-muted-foreground">No data available</div>
             )}
           </CardContent>
         </Card>
@@ -294,7 +294,7 @@ export default function AnalyticsPage() {
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     outerRadius={80}
-                    fill="#8884d8"
+                    fill="var(--primary)"
                     dataKey="value"
                   >
                     {categoryData.map((entry, index) => (
@@ -305,7 +305,7 @@ export default function AnalyticsPage() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-center py-12 text-gray-500">No products added yet</div>
+              <div className="text-center py-12 text-muted-foreground">No products added yet</div>
             )}
           </CardContent>
         </Card>
@@ -324,22 +324,22 @@ export default function AnalyticsPage() {
                 {topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#b1c98d] flex items-center justify-center text-[#2e3621] font-bold text-sm">
+                      <div className="w-8 h-8 rounded-lg bg-primary text-background flex items-center justify-center font-bold text-sm">
                         {index + 1}
                       </div>
                       <div>
-                        <p className="font-medium text-black">{product.name}</p>
-                        <p className="text-sm text-gray-500">{product.sales} sales</p>
+                        <p className="font-medium text-foreground">{product.name}</p>
+                        <p className="text-sm text-muted-foreground">{product.sales} sales</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-black">${product.revenue.toFixed(2)}</p>
+                      <p className="font-bold text-foreground">${product.revenue.toFixed(2)}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">No sales data yet</div>
+              <div className="text-center py-8 text-muted-foreground">No sales data yet</div>
             )}
           </CardContent>
         </Card>
@@ -366,7 +366,7 @@ export default function AnalyticsPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">No products added yet</div>
+              <div className="text-center py-8 text-muted-foreground">No products added yet</div>
             )}
           </CardContent>
         </Card>
@@ -381,48 +381,48 @@ export default function AnalyticsPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.totalRevenue > 0 ? (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-success/10 border border-success/30 rounded-lg">
                 <div className="flex items-start space-x-3">
-                  <TrendingUp className="w-5 h-5 text-green-600 mt-0.5" />
+                  <TrendingUp className="w-5 h-5 text-success mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-green-900">Revenue Generated</h4>
-                    <p className="text-sm text-green-700 mt-1">
+                    <h4 className="font-medium text-success">Revenue Generated</h4>
+                    <p className="text-sm text-success/80 mt-1">
                       You've generated ${stats.totalRevenue.toFixed(2)} in total revenue.
                     </p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg">
                 <div className="flex items-start space-x-3">
-                  <ShoppingCart className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <ShoppingCart className="w-5 h-5 text-primary mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-blue-900">Get Started</h4>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <h4 className="font-medium text-primary">Get Started</h4>
+                    <p className="text-sm text-primary/80 mt-1">
                       Add products and wait for orders to see analytics here.
                     </p>
                   </div>
                 </div>
               </div>
             )}
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="p-4 bg-pending/10 border border-pending/30 rounded-lg">
               <div className="flex items-start space-x-3">
-                <Package className="w-5 h-5 text-amber-600 mt-0.5" />
+                <Package className="w-5 h-5 text-pending mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-amber-900">Product Categories</h4>
-                  <p className="text-sm text-amber-700 mt-1">
+                  <h4 className="font-medium text-pending">Product Categories</h4>
+                  <p className="text-sm text-pending/80 mt-1">
                     You have {categoryData.reduce((sum, c) => sum + c.value, 0)} products across{" "}
                     {categoryData.length} categories.
                   </p>
                 </div>
               </div>
             </div>
-            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+            <div className="p-4 bg-accent/10 border border-accent/30 rounded-lg">
               <div className="flex items-start space-x-3">
-                <Users className="w-5 h-5 text-purple-600 mt-0.5" />
+                <Users className="w-5 h-5 text-accent mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-purple-900">Orders</h4>
-                  <p className="text-sm text-purple-700 mt-1">
+                  <h4 className="font-medium text-accent">Orders</h4>
+                  <p className="text-sm text-accent/80 mt-1">
                     You have received {stats.totalOrders} orders. Keep them coming!
                   </p>
                 </div>
