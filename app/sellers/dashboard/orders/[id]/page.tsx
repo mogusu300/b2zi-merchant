@@ -252,7 +252,7 @@ export default function SellerOrderDetailPage() {
             </div>
             <div
               className={`px-4 py-2 rounded-lg border font-medium ${
-                STATUS_COLORS[order.status] || "bg-gray-50"
+                STATUS_COLORS[order.status] || "bg-secondary"
               }`}
             >
               {order.status.charAt(0).toUpperCase() + order.status.slice(1)}

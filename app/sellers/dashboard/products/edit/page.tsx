@@ -286,7 +286,7 @@ export default function EditProductPage() {
   }
 
   if (error && loading) {
-    return <div className="text-center py-12 text-red-600">{error}</div>
+    return <div className="text-center py-12 text-destructive">{error}</div>
   }
 
   return (
@@ -372,7 +372,7 @@ export default function EditProductPage() {
                   min="0"
                   required
                 />
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {parseInt(formData.stock) > 0 ? "✓ In Stock" : "❌ Out of Stock"}
                 </p>
               </div>
@@ -384,7 +384,7 @@ export default function EditProductPage() {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2e3621]"
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   required
                 >
                   <option>Handicrafts</option>
