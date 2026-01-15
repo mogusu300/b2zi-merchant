@@ -80,12 +80,12 @@ export default function CustomerLoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white">
+    <div className="min-h-screen relative overflow-hidden bg-background">
       {/* Unique background for Customer Login */}
       <div className="fixed inset-0 -z-20">
         <CustomerLoginBackground />
       </div>
-      <div className="fixed inset-0 bg-gradient-to-br from-white/80 to-white/90 -z-10" />
+      <div className="fixed inset-0 bg-gradient-to-br from-background/80 to-background/90 -z-10" />
 
       <nav className="border-b border-border bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-slide-down">
         <div className="container mx-auto px-4 py-4">
