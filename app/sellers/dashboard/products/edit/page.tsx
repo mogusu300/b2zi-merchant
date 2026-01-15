@@ -300,14 +300,14 @@ export default function EditProductPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-black">Edit Product</h1>
-          <p className="text-gray-600 mt-1">Update your product details</p>
+          <h1 className="text-3xl font-bold text-foreground">Edit Product</h1>
+          <p className="text-muted-foreground mt-1">Update your product details</p>
         </div>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        <div className="p-4 bg-destructive/10 border border-destructive/30 rounded-lg text-destructive">
           {error}
         </div>
       )}
@@ -408,7 +408,7 @@ export default function EditProductPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#2e3621] transition">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition">
               <input
                 type="file"
                 id="images"
@@ -422,11 +422,11 @@ export default function EditProductPage() {
                 htmlFor="images"
                 className={`cursor-pointer flex flex-col items-center gap-2 ${uploading ? "opacity-50" : ""}`}
               >
-                <Upload className="w-8 h-8 text-gray-400" />
-                <span className="text-sm font-medium text-gray-600">
+                <Upload className="w-8 h-8 text-muted-foreground" />
+                <span className="text-sm font-medium text-muted-foreground">
                   {uploading ? "Uploading..." : "Click to upload or drag and drop"}
                 </span>
-                <span className="text-xs text-gray-500">PNG, JPG, WebP up to 10MB</span>
+                <span className="text-xs text-muted-foreground">PNG, JPG, WebP up to 10MB</span>
               </label>
             </div>
 
@@ -437,7 +437,7 @@ export default function EditProductPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                   {images.map((image, index) => (
                     <div key={index} className="relative group">
-                      <div className="w-full aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                      <div className="w-full aspect-square bg-secondary rounded-lg overflow-hidden border border-border">
                         <img
                           src={image}
                           alt={`Product ${index + 1}`}
@@ -447,12 +447,12 @@ export default function EditProductPage() {
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                        className="absolute top-1 right-1 bg-destructive text-background p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
                       >
                         <X className="w-4 h-4" />
                       </button>
                       {index === 0 && (
-                        <div className="absolute top-1 left-1 bg-[#2e3621] text-white px-2 py-1 rounded text-xs">
+                        <div className="absolute top-1 left-1 bg-primary text-background px-2 py-1 rounded text-xs">
                           Primary
                         </div>
                       )}
@@ -465,7 +465,7 @@ export default function EditProductPage() {
         </Card>
 
         {/* Colors */}
-        <Card className="border-2 border-blue-200 bg-blue-50">
+        <Card className="border-2 border-primary/30 bg-primary/10">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="text-lg">🎨 Step 1: Add Color Options</span>
@@ -478,16 +478,16 @@ export default function EditProductPage() {
               <button
                 type="button"
                 onClick={() => setColorSearchOpen(!colorSearchOpen)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg flex items-center justify-between bg-white hover:bg-gray-50 transition"
+                className="w-full px-3 py-2 border border-border rounded-lg flex items-center justify-between bg-background hover:bg-secondary transition"
               >
-                <span className="text-gray-600">
+                <span className="text-muted-foreground">
                   {colorVariants.length > 0 ? `${colorVariants.length} color(s) selected` : "Select colors..."}
                 </span>
                 <ChevronDown className={`w-4 h-4 transition ${colorSearchOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {colorSearchOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-10">
                   <Input
                     type="text"
                     placeholder="Search colors..."
@@ -504,17 +504,17 @@ export default function EditProductPage() {
                           type="button"
                           onClick={() => handleAddColor(color)}
                           disabled={colorVariants.some(c => c.color === color)}
-                          className={`w-full text-left px-4 py-2 hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
+                          className={`w-full text-left px-4 py-2 hover:bg-primary/10 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
                         >
-                          <div className="w-4 h-4 rounded-full border-2 border-gray-300" style={{ backgroundColor: color.toLowerCase() }} />
+                          <div className="w-4 h-4 rounded-full border-2 border-border" style={{ backgroundColor: color.toLowerCase() }} />
                           {color}
                           {colorVariants.some(c => c.color === color) && (
-                            <span className="ml-auto text-blue-600">✓</span>
+                            <span className="ml-auto text-primary">✓</span>
                           )}
                         </button>
                       ))
                     ) : (
-                      <div className="px-4 py-3 text-gray-500 text-sm">No colors found</div>
+                      <div className="px-4 py-3 text-muted-foreground text-sm">No colors found</div>
                     )}
                   </div>
                 </div>
@@ -524,19 +524,19 @@ export default function EditProductPage() {
             {/* Selected Colors */}
             {colorVariants.length > 0 && (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-700">Selected Colors:</p>
+                <p className="text-sm font-medium text-foreground">Selected Colors:</p>
                 <div className="flex flex-wrap gap-2">
                   {colorVariants.map((variant, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200"
+                      className="flex items-center gap-2 px-3 py-2 bg-background rounded-lg border border-border"
                     >
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" style={{ backgroundColor: variant.color.toLowerCase() }} />
-                      <span className="font-medium text-gray-900">{variant.color}</span>
+                      <div className="w-5 h-5 rounded-full border-2 border-border" style={{ backgroundColor: variant.color.toLowerCase() }} />
+                      <span className="font-medium text-foreground">{variant.color}</span>
                       <button
                         type="button"
                         onClick={() => handleRemoveColor(idx)}
-                        className="text-red-600 hover:text-red-800 ml-1"
+                        className="text-destructive hover:text-destructive/80 ml-1"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -549,7 +549,7 @@ export default function EditProductPage() {
         </Card>
 
         {/* Types/Variants with Pricing */}
-        <Card className="border-2 border-green-200 bg-green-50">
+        <Card className="border-2 border-success/30 bg-success/10">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <span className="text-lg">📏 Step 2: Add Types/Sizes (Optional)</span>
@@ -565,7 +565,7 @@ export default function EditProductPage() {
                 placeholder="e.g., Small, Medium, Large"
                 onKeyPress={(e) => e.key === "Enter" && handleAddType()}
               />
-              <Button type="button" onClick={handleAddType} className="bg-green-600 hover:bg-green-700">
+              <Button type="button" onClick={handleAddType} className="bg-success hover:bg-success/90">
                 <Plus className="w-4 h-4" />
                 Add Type
               </Button>
@@ -573,10 +573,10 @@ export default function EditProductPage() {
 
             {typeVariants.length > 0 && (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-700">Type/Size Options with Prices:</p>
+                <p className="text-sm font-medium text-foreground">Type/Size Options with Prices:</p>
                 {typeVariants.map((variant, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                    <span className="font-medium text-gray-900 min-w-[80px]">{variant.type}</span>
+                  <div key={idx} className="flex items-center gap-3 p-3 bg-background rounded-lg border border-border">
+                    <span className="font-medium text-foreground min-w-[80px]">{variant.type}</span>
                     <Input
                       type="number"
                       step="0.01"
@@ -586,12 +586,12 @@ export default function EditProductPage() {
                       className="flex-1 text-sm"
                     />
                     {variant.price && (
-                      <span className="text-sm text-gray-500">${parseFloat(variant.price).toFixed(2)}</span>
+                      <span className="text-sm text-muted-foreground">${parseFloat(variant.price).toFixed(2)}</span>
                     )}
                     <button
                       type="button"
                       onClick={() => handleRemoveType(idx)}
-                      className="text-red-600 hover:text-red-800 p-1"
+                      className="text-destructive hover:text-destructive/80 p-1"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -609,7 +609,7 @@ export default function EditProductPage() {
               Cancel
             </Button>
           </Link>
-          <Button type="submit" disabled={saving} className="bg-[#2e3621] hover:bg-black">
+          <Button type="submit" disabled={saving} className="bg-primary hover:bg-primary/90">
             {saving ? "Saving..." : "Save Changes"}
           </Button>
         </div>
