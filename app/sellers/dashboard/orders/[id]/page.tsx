@@ -23,15 +23,15 @@ interface OrderDetailPageProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending: "bg-blue-50 border-blue-200 text-blue-900",
-  approved: "bg-green-50 border-green-200 text-green-900",
-  awaiting_payment: "bg-amber-50 border-amber-200 text-amber-900",
-  paid: "bg-emerald-50 border-emerald-200 text-emerald-900",
-  dispatched: "bg-orange-50 border-orange-200 text-orange-900",
-  in_transit: "bg-blue-50 border-blue-200 text-blue-900",
-  delivered: "bg-green-50 border-green-200 text-green-900",
-  rejected: "bg-red-50 border-red-200 text-red-900",
-  cancelled: "bg-gray-50 border-gray-200 text-gray-900",
+  pending: "bg-primary/10 border-primary/30 text-primary",
+  approved: "bg-success/10 border-success/30 text-success",
+  awaiting_payment: "bg-pending/10 border-pending/30 text-pending",
+  paid: "bg-success/10 border-success/30 text-success",
+  dispatched: "bg-accent/10 border-accent/30 text-accent",
+  in_transit: "bg-accent/10 border-accent/30 text-accent",
+  delivered: "bg-success/10 border-success/30 text-success",
+  rejected: "bg-destructive/10 border-destructive/30 text-destructive",
+  cancelled: "bg-muted border-muted text-muted-foreground",
 };
 
 export default function SellerOrderDetailPage() {
@@ -173,10 +173,10 @@ export default function SellerOrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-secondary/30 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading order details...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p className="mt-4 text-muted-foreground">Loading order details...</p>
         </div>
       </div>
     );
@@ -184,22 +184,22 @@ export default function SellerOrderDetailPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-secondary/30">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6"
+            className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 flex items-start gap-4">
-            <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-6 flex items-start gap-4">
+            <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-0.5" />
             <div>
-              <h2 className="text-lg font-semibold text-red-900 mb-2">
+              <h2 className="text-lg font-semibold text-destructive mb-2">
                 Error
               </h2>
-              <p className="text-red-800">{error}</p>
+              <p className="text-destructive">{error}</p>
             </div>
           </div>
         </div>
@@ -209,16 +209,16 @@ export default function SellerOrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-secondary/30">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6"
+            className="flex items-center gap-2 text-primary hover:text-primary/80 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <p className="text-gray-600">Order not found</p>
+          <p className="text-muted-foreground">Order not found</p>
         </div>
       </div>
     );
@@ -230,23 +230,23 @@ export default function SellerOrderDetailPage() {
   const canPay = order.status === "awaiting_payment";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary/30">
       {/* Header */}
-      <div className="bg-white shadow">
+      <div className="bg-background shadow">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-4"
+            className="flex items-center gap-2 text-primary hover:text-primary/80 mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Orders
           </button>
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-foreground">
                 Order #{order.id.slice(0, 8).toUpperCase()}
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-muted-foreground mt-1">
                 Order Value: ${order.total.toFixed(2)}
               </p>
             </div>
@@ -267,10 +267,10 @@ export default function SellerOrderDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"
+            className="mb-6 bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-start gap-3"
           >
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{actionError}</p>
+            <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+            <p className="text-destructive">{actionError}</p>
           </motion.div>
         )}
 
@@ -279,7 +279,7 @@ export default function SellerOrderDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Order Items */}
             <Card className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">
                 Order Items
               </h2>
               <div className="space-y-4">
@@ -288,22 +288,22 @@ export default function SellerOrderDetailPage() {
                     key={item.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="flex gap-4 pb-4 border-b last:pb-0 last:border-0"
+                    className="flex gap-4 pb-4 border-b last:pb-0 last:border-0 border-border"
                   >
-                    <div className="flex-shrink-0 w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <Package className="w-8 h-8 text-gray-400" />
+                    <div className="flex-shrink-0 w-16 h-16 bg-secondary rounded-lg flex items-center justify-center">
+                      <Package className="w-8 h-8 text-muted-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-foreground">
                         {item.productName}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Quantity: {item.quantity}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Seller: {item.sellerName}
                       </p>
-                      <p className="font-semibold text-gray-900 mt-1">
+                      <p className="font-semibold text-foreground mt-1">
                         ${item.price.toFixed(2)}
                       </p>
                     </div>
@@ -314,34 +314,34 @@ export default function SellerOrderDetailPage() {
 
             {/* Delivery Information */}
             <Card className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">
                 Delivery Information
               </h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm text-gray-600">Customer Name</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-muted-foreground">Customer Name</p>
+                  <p className="font-medium text-foreground">
                     {order.customerName}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Phone</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-muted-foreground">Phone</p>
+                  <p className="font-medium text-foreground">
                     {order.customerPhone}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Email</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="font-medium text-foreground">
                     {order.customerEmail}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Delivery Address</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-muted-foreground">Delivery Address</p>
+                  <p className="font-medium text-foreground">
                     {order.deliveryAddress}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {order.deliveryCity}, {order.deliveryState}{" "}
                     {order.deliveryZipCode}
                   </p>
@@ -352,42 +352,42 @@ export default function SellerOrderDetailPage() {
             {/* Order Status & Tracking */}
             {order.trackingStatus && (
               <Card className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                <h2 className="text-lg font-semibold text-foreground mb-4">
                   Tracking Information
                 </h2>
                 <div className="space-y-3">
                   {order.trackingNumber && (
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Tracking Number
                       </p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-foreground">
                         {order.trackingNumber}
                       </p>
                     </div>
                   )}
                   {order.driverName && (
                     <div>
-                      <p className="text-sm text-gray-600">Driver Name</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-sm text-muted-foreground">Driver Name</p>
+                      <p className="font-medium text-foreground">
                         {order.driverName}
                       </p>
                     </div>
                   )}
                   {order.estimatedDelivery && (
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-foreground">
                         Estimated Delivery
                       </p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-foreground">
                         {new Date(order.estimatedDelivery).toLocaleDateString()}
                       </p>
                     </div>
                   )}
                   {order.trackingMessage && (
                     <div>
-                      <p className="text-sm text-gray-600">Status Message</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-sm text-muted-foreground">Status Message</p>
+                      <p className="font-medium text-foreground">
                         {order.trackingMessage}
                       </p>
                     </div>
@@ -400,7 +400,7 @@ export default function SellerOrderDetailPage() {
           {/* Sidebar - Actions */}
           <div className="space-y-6">
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-foreground mb-4">
                 Actions
               </h3>
               <div className="space-y-3">
@@ -408,7 +408,7 @@ export default function SellerOrderDetailPage() {
                   <Button
                     onClick={handleApprove}
                     disabled={actionLoading}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    className="w-full bg-success hover:bg-success/90 text-background"
                   >
                     <CheckCircle2 className="w-4 h-4 mr-2" />
                     Approve Order
@@ -420,7 +420,7 @@ export default function SellerOrderDetailPage() {
                     onClick={handleReject}
                     disabled={actionLoading}
                     variant="outline"
-                    className="w-full text-red-600 border-red-200 hover:bg-red-50"
+                    className="w-full text-destructive border-destructive/30 hover:bg-destructive/10"
                   >
                     <XCircle className="w-4 h-4 mr-2" />
                     Reject Order
@@ -431,7 +431,7 @@ export default function SellerOrderDetailPage() {
                   <Button
                     onClick={handleDispatch}
                     disabled={actionLoading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-background"
                   >
                     <Truck className="w-4 h-4 mr-2" />
                     Dispatch Order
@@ -439,7 +439,7 @@ export default function SellerOrderDetailPage() {
                 )}
 
                 {!canApprove && !canReject && !canDispatch && (
-                  <div className="p-3 bg-gray-50 rounded-lg text-sm text-gray-600 text-center">
+                  <div className="p-3 bg-secondary rounded-lg text-sm text-muted-foreground text-center">
                     No actions available for this order status
                   </div>
                 )}
@@ -448,43 +448,43 @@ export default function SellerOrderDetailPage() {
 
             {/* Order Summary */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <h3 className="text-lg font-semibold text-foreground mb-4">
                 Summary
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Order Date</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="text-muted-foreground">Order Date</span>
+                  <span className="font-medium text-foreground">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                 </div>
                 {order.approvedAt && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Approved</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Approved</span>
+                    <span className="font-medium text-foreground">
                       {new Date(order.approvedAt).toLocaleDateString()}
                     </span>
                   </div>
                 )}
                 {order.paidAt && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Payment Received</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Payment Received</span>
+                    <span className="font-medium text-foreground">
                       {new Date(order.paidAt).toLocaleDateString()}
                     </span>
                   </div>
                 )}
                 {order.dispatchedAt && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Dispatched</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-muted-foreground">Dispatched</span>
+                    <span className="font-medium text-foreground">
                       {new Date(order.dispatchedAt).toLocaleDateString()}
                     </span>
                   </div>
                 )}
-                <div className="pt-3 border-t flex justify-between">
-                  <span className="font-semibold text-gray-900">Total</span>
-                  <span className="font-semibold text-gray-900">
+                <div className="pt-3 border-t border-border flex justify-between">
+                  <span className="font-semibold text-foreground">Total</span>
+                  <span className="font-semibold text-foreground">
                     ${order.total.toFixed(2)}
                   </span>
                 </div>
