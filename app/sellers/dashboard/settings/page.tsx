@@ -34,8 +34,8 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-3xl font-bold text-black">Store Settings</h1>
-        <p className="text-gray-600 mt-1">Manage your business information and preferences</p>
+        <h1 className="text-3xl font-bold text-foreground">Store Settings</h1>
+        <p className="text-muted-foreground mt-1">Manage your business information and preferences</p>
       </div>
 
       {/* Business Information */}
@@ -70,7 +70,7 @@ export default function SettingsPage() {
               id="category"
               value={businessInfo.category}
               onChange={(e) => setBusinessInfo({ ...businessInfo, category: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2e3621]"
+              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option>Handicrafts</option>
               <option>Food & Beverages</option>
@@ -208,7 +208,7 @@ export default function SettingsPage() {
       </Card>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave} className="bg-[#2e3621] hover:bg-black text-white">
+        <Button onClick={handleSave} className="bg-primary hover:bg-primary/90 text-background">
           <Save className="w-4 h-4 mr-2" />
           Save Changes
         </Button>
