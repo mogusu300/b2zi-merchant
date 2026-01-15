@@ -60,25 +60,25 @@ interface Merchant {
 
 const statusConfig = {
   pending: {
-    bg: 'bg-yellow-50',
-    badge: 'bg-yellow-100 text-yellow-800',
+    bg: 'bg-pending/10',
+    badge: 'bg-pending/20 text-pending',
     icon: Clock,
     label: 'Pending Review',
-    borderColor: '#eab308'
+    borderColor: 'hsl(47.9 100% 52.9%)' // pending
   },
   approved: {
-    bg: 'bg-green-50',
-    badge: 'bg-green-100 text-green-800',
+    bg: 'bg-success/10',
+    badge: 'bg-success/20 text-success',
     icon: CheckCircle,
     label: 'Approved',
-    borderColor: '#22c55e'
+    borderColor: 'hsl(142.3 76.2% 36.3%)' // success
   },
   rejected: {
-    bg: 'bg-red-50',
-    badge: 'bg-red-100 text-red-800',
+    bg: 'bg-destructive/10',
+    badge: 'bg-destructive/20 text-destructive',
     icon: XCircle,
     label: 'Rejected',
-    borderColor: '#ef4444'
+    borderColor: 'hsl(0 84.2% 60.2%)' // destructive
   }
 }
 
@@ -126,19 +126,19 @@ function DetailModal({
     const isLoading = imagesLoading[type]
 
     return (
-      <div className="border-2 border-gray-300 rounded-lg overflow-hidden bg-white shadow-md">
+      <div className="border-2 border-border rounded-lg overflow-hidden bg-background shadow-md">
         {hasError ? (
-          <div className="w-full h-80 bg-gray-100 flex flex-col items-center justify-center gap-3">
-            <AlertCircle className="h-12 w-12 text-red-500" />
+          <div className="w-full h-80 bg-secondary flex flex-col items-center justify-center gap-3">
+            <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <p className="text-sm font-semibold text-red-600">Image Failed to Load</p>
-              <p className="text-xs text-gray-600 mt-1">URL: {url}</p>
+              <p className="text-sm font-semibold text-destructive">Image Failed to Load</p>
+              <p className="text-xs text-muted-foreground mt-1">URL: {url}</p>
               <button
                 onClick={() => {
                   setImageErrors(prev => ({ ...prev, [type]: false }))
                   setImagesLoading(prev => ({ ...prev, [type]: true }))
                 }}
-                className="mt-3 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                className="mt-3 text-xs text-primary hover:text-primary/80 font-medium"
               >
                 Try Again
               </button>
@@ -147,8 +147,8 @@ function DetailModal({
         ) : (
           <>
             {isLoading && (
-              <div className="w-full h-80 bg-gray-100 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+              <div className="w-full h-80 bg-secondary flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-primary animate-spin" />
               </div>
             )}
             <img
@@ -161,7 +161,7 @@ function DetailModal({
             />
           </>
         )}
-        <p className="text-sm text-center font-semibold text-gray-700 p-3 bg-gray-50 border-t">{label}</p>
+        <p className="text-sm text-center font-semibold text-foreground p-3 bg-secondary border-t">{ label}</p>
       </div>
     )
   }
@@ -222,7 +222,7 @@ function DetailModal({
             <div className="space-y-3 pt-4 border-t">
               <button
                 onClick={() => setShowDocuments(!showDocuments)}
-                className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80"
               >
                 {showDocuments ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 {showDocuments ? 'Hide' : 'Show'} ID Documents (NRC/Passport)
@@ -262,7 +262,7 @@ function DetailModal({
                   Reject
                 </Button>
                 <Button 
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-success hover:bg-success/80"
                   disabled={isLoading}
                   onClick={() => handleStatusChange('approved')}
                 >
@@ -286,22 +286,22 @@ function DetailModal({
 // Sidebar Component
 function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
-    <aside className="w-64 h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col">
+    <aside className="w-64 h-full bg-gradient-to-b from-foreground via-foreground/90 to-foreground text-background flex flex-col">
         {/* Header with Logo */}
-        <div className="p-6 border-b border-slate-700/50 bg-gradient-to-r from-slate-900 to-slate-800">
+        <div className="p-6 border-b border-border/50 bg-gradient-to-r from-foreground to-foreground/90">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Users className="h-5 w-5 text-white" />
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <Users className="h-5 w-5 text-background" />
                 </div>
                 <h2 className="text-xl font-bold">MerchantHub</h2>
               </div>
-              <p className="text-xs text-slate-400">Admin Dashboard</p>
+              <p className="text-xs text-muted-foreground/60">Admin Dashboard</p>
             </div>
             <button
               onClick={onClose}
-              className="md:hidden p-1 hover:bg-slate-700 rounded transition-colors"
+              className="md:hidden p-1 hover:bg-secondary rounded transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
@@ -315,26 +315,26 @@ function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
           <NavLink icon={BarChart3} label="Analytics" active={false} href="#" />
           
           {/* Divider */}
-          <div className="my-4 border-t border-slate-700/30" />
+          <div className="my-4 border-t border-border/30" />
           
           <NavLink icon={Settings} label="Settings" active={false} href="#" />
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-700/50 space-y-3 bg-gradient-to-t from-slate-900 to-transparent">
-          <div className="px-4 py-3 bg-blue-600/10 border border-blue-500/20 rounded-lg">
-            <p className="text-xs font-semibold text-blue-300 mb-1">Live Status</p>
-            <p className="text-xs text-slate-400">
-              <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+        <div className="p-4 border-t border-border/50 space-y-3 bg-gradient-to-t from-foreground to-transparent">
+          <div className="px-4 py-3 bg-primary/10 border border-primary/20 rounded-lg">
+            <p className="text-xs font-semibold text-primary/80 mb-1">Live Status</p>
+            <p className="text-xs text-muted-foreground">
+              <span className="inline-block w-2 h-2 bg-success rounded-full mr-2"></span>
               System online
             </p>
           </div>
           
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-slate-700/50 transition-colors text-sm text-slate-300 hover:text-white">
+          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-foreground/30 transition-colors text-sm text-muted-foreground hover:text-background">
             <LogOut className="h-4 w-4" />
             Logout
           </button>
-          <p className="text-xs text-slate-500 px-4 text-center pt-2 border-t border-slate-700/30">
+          <p className="text-xs text-muted-foreground/50 px-4 text-center pt-2 border-t border-border/30">
             v1.0.0 • Dec 2025
           </p>
         </div>
@@ -357,8 +357,8 @@ function NavLink({
     <Link href={href} className={`
       flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm
       ${active 
-        ? 'bg-blue-600 text-white' 
-        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+        ? 'bg-primary text-background' 
+        : 'text-muted-foreground hover:bg-foreground/20 hover:text-background'
       }
     `}>
       <Icon className="h-4 w-4" />
@@ -454,15 +454,15 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white flex flex-col md:flex-row">
+    <div className="min-h-screen relative overflow-hidden bg-background flex flex-col md:flex-row">
       {/* Background SVG */}
       <div className="fixed inset-0 -z-20">
         <AdminBackground />
       </div>
-      <div className="fixed inset-0 bg-gradient-to-br from-white/85 to-white/90 -z-10" />
+      <div className="fixed inset-0 bg-gradient-to-br from-background/85 to-background/90 -z-10" />
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:block w-64 h-screen overflow-y-auto fixed left-0 top-0 border-r border-slate-700">
+      <div className="hidden md:block w-64 h-screen overflow-y-auto fixed left-0 top-0 border-r border-border">
         <Sidebar isOpen={false} onClose={() => setSidebarOpen(false)} />
       </div>
 
@@ -473,18 +473,18 @@ export default function AdminPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col w-full md:ml-64">
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-sm">
           <div className="flex items-center justify-between px-4 md:px-8 py-4">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="md:hidden p-2 hover:bg-secondary rounded-lg transition-colors"
               >
                 <Menu className="h-6 w-6" />
               </button>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Merchant Dashboard</h1>
-                <p className="text-xs text-gray-500 mt-1">Manage and approve merchant registrations</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Merchant Dashboard</h1>
+                <p className="text-xs text-muted-foreground mt-1">Manage and approve merchant registrations</p>
               </div>
             </div>
             <Link 
@@ -530,15 +530,15 @@ export default function AdminPage() {
                   <p className="text-background/80 mb-6">Efficiently manage merchant registrations, verify identities, and monitor marketplace activity from a single dashboard.</p>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center text-success font-bold">✓</div>
                       <span>Real-time merchant verification status</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center text-success font-bold">✓</div>
                       <span>Document review and management</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">✓</div>
+                      <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center text-success font-bold">✓</div>
                       <span>Complete merchant profiles and analytics</span>
                     </div>
                   </div>
@@ -579,12 +579,12 @@ export default function AdminPage() {
             <div className="space-y-4">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     placeholder="Search merchants by name, email, or phone..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-12 py-2 h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                    className="pl-12 py-2 h-11 border-border focus:border-primary focus:ring-primary"
                   />
                 </div>
               </div>
@@ -599,8 +599,8 @@ export default function AdminPage() {
                     onClick={() => setStatusFilter(status)}
                     className={`capitalize transition-all ${
                       statusFilter === status 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md' 
-                        : 'border-gray-300 text-gray-700 hover:bg-gray-100'
+                        ? 'bg-primary hover:bg-primary/80 text-background shadow-md' 
+                        : 'border-border text-foreground hover:bg-secondary'
                     }`}
                   >
                     {status === 'all' ? 'All Merchants' : status === 'pending' ? '⏳ Pending' : status === 'approved' ? '✅ Approved' : '❌ Rejected'}
@@ -611,20 +611,20 @@ export default function AdminPage() {
 
             {/* Merchants List */}
             {loading ? (
-              <Card className="p-12 text-center bg-white border-gray-200">
+              <Card className="p-12 text-center bg-background border-border">
                 <div className="space-y-3">
                   <div className="inline-block">
                     <div className="animate-spin">⏳</div>
                   </div>
-                  <p className="text-gray-600 font-medium">Loading merchants...</p>
+                  <p className="text-muted-foreground font-medium">Loading merchants...</p>
                 </div>
               </Card>
             ) : filteredMerchants.length === 0 ? (
-              <Card className="p-12 text-center bg-white border-gray-200">
-                <p className="text-gray-600 mb-2 text-lg font-medium">
+              <Card className="p-12 text-center bg-background border-border">
+                <p className="text-muted-foreground mb-2 text-lg font-medium">
                   {merchants.length === 0 ? 'No merchants registered yet' : 'No merchants found'}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground/70">
                   {merchants.length === 0 
                     ? 'Merchants will appear here when they register. Visit /register to test.' 
                     : 'Try adjusting your search or filters'}
@@ -646,39 +646,39 @@ export default function AdminPage() {
                         {/* Left Section */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start gap-3 mb-4">
-                            <div className="mt-1 flex-shrink-0 p-2 bg-white rounded-lg border-2" style={{ borderColor: config.borderColor }}>
+                            <div className="mt-1 flex-shrink-0 p-2 bg-background rounded-lg border-2" style={{ borderColor: config.borderColor }}>
                               <IconComponent className="h-5 w-5" style={{ color: config.borderColor }} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-3 flex-wrap mb-1">
-                                <h3 className="text-lg font-bold text-gray-900">{merchant.businessName}</h3>
+                                <h3 className="text-lg font-bold text-foreground">{merchant.businessName}</h3>
                                 <Badge className={config.badge}>
                                   {config.label}
                                 </Badge>
                               </div>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-muted-foreground">
                                 {merchant.businessType || 'N/A'} • {merchant.businessAddress || 'N/A'}
                               </p>
                             </div>
                           </div>
 
                           {/* Details Grid */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-4 bg-white bg-opacity-40 p-3 rounded-lg">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-4 bg-background bg-opacity-40 p-3 rounded-lg">
                             <div>
-                              <p className="text-xs text-gray-600 uppercase font-bold tracking-wider">Owner</p>
-                              <p className="font-semibold text-gray-900 mt-1">{merchant.ownerName}</p>
+                              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Owner</p>
+                              <p className="font-semibold text-foreground mt-1">{merchant.ownerName}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-600 uppercase font-bold tracking-wider">Email</p>
-                              <p className="font-semibold text-gray-900 truncate mt-1">{merchant.email}</p>
+                              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Email</p>
+                              <p className="font-semibold text-foreground truncate mt-1">{merchant.email}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-600 uppercase font-bold tracking-wider">Phone</p>
-                              <p className="font-semibold text-gray-900 mt-1">{merchant.phone}</p>
+                              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Phone</p>
+                              <p className="font-semibold text-foreground mt-1">{merchant.phone}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-600 uppercase font-bold tracking-wider">Registered</p>
-                              <p className="font-semibold text-gray-900 mt-1">{new Date(merchant.createdAt).toLocaleDateString()}</p>
+                              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Registered</p>
+                              <p className="font-semibold text-foreground mt-1">{new Date(merchant.createdAt).toLocaleDateString()}</p>
                             </div>
                           </div>
                         </div>
@@ -689,13 +689,13 @@ export default function AdminPage() {
                             variant="default"
                             size="sm"
                             onClick={() => handleViewDetails(merchant)}
-                            className="whitespace-nowrap bg-blue-600 hover:bg-blue-700"
+                            className="whitespace-nowrap bg-primary hover:bg-primary/80"
                           >
                             View Details
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="sm" className="px-2 border-gray-300">
+                              <Button variant="outline" size="sm" className="px-2 border-border">
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -707,14 +707,14 @@ export default function AdminPage() {
                               {merchant.status === 'pending' && (
                                 <>
                                   <DropdownMenuItem 
-                                    className="text-green-600 focus:text-green-600"
+                                    className="text-success focus:text-success"
                                     onClick={() => handleStatusUpdate(merchant.id, 'approved')}
                                   >
                                     <CheckCircle className="h-4 w-4 mr-2" />
                                     Approve
                                   </DropdownMenuItem>
                                   <DropdownMenuItem 
-                                    className="text-red-600 focus:text-red-600"
+                                    className="text-destructive focus:text-destructive"
                                     onClick={() => handleStatusUpdate(merchant.id, 'rejected')}
                                   >
                                     <XCircle className="h-4 w-4 mr-2" />
