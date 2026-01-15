@@ -77,7 +77,7 @@ export default function LoginTest() {
             </div>
             <button
               onClick={testCustomerLogin}
-              className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700"
+              className="w-full bg-primary text-background py-2 rounded font-semibold hover:bg-primary/80"
             >
               Test Customer Login
             </button>
@@ -113,7 +113,7 @@ export default function LoginTest() {
             </div>
             <button
               onClick={testMerchantLogin}
-              className="w-full bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700"
+              className="w-full bg-success text-background py-2 rounded font-semibold hover:bg-success/80"
             >
               Test Merchant Login
             </button>
@@ -131,12 +131,12 @@ export default function LoginTest() {
         <h2 className="text-xl font-bold mb-4">Session Check</h2>
         <button
           onClick={testSession}
-          className="w-full bg-purple-600 text-white py-2 rounded font-semibold hover:bg-purple-700"
+          className="w-full bg-accent text-background py-2 rounded font-semibold hover:bg-accent/80"
         >
           Check Session
         </button>
         {sessionResult && (
-          <pre className="bg-gray-100 p-4 rounded text-xs overflow-auto mt-4 max-h-64">
+          <pre className="bg-secondary p-4 rounded text-xs overflow-auto mt-4 max-h-64">
             {sessionResult}
           </pre>
         )}
@@ -146,16 +146,16 @@ export default function LoginTest() {
       <div className="mt-8 border-t pt-8">
         <h3 className="font-bold mb-4">Quick Links</h3>
         <div className="flex gap-4 flex-wrap">
-          <a href="/customers/login" className="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+          <a href="/customers/login" className="px-4 py-2 bg-primary/10 text-primary rounded hover:bg-primary/20">
             Customer Login
           </a>
-          <a href="/sellers/login" className="px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200">
+          <a href="/sellers/login" className="px-4 py-2 bg-success/10 text-success rounded hover:bg-success/20">
             Seller Login
           </a>
-          <a href="/marketplace" className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+          <a href="/marketplace" className="px-4 py-2 bg-secondary text-muted-foreground rounded hover:bg-secondary/80">
             Marketplace
           </a>
-          <a href="/sellers/dashboard" className="px-4 py-2 bg-purple-100 text-purple-700 rounded hover:bg-purple-200">
+            <a href="/sellers/dashboard" className="px-4 py-2 bg-accent/10 text-accent rounded hover:bg-accent/20">
             Seller Dashboard
           </a>
         </div>
