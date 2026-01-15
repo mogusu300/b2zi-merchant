@@ -115,11 +115,11 @@ export default function ProductsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-black">Products</h1>
-          <p className="text-gray-600 mt-1">Manage your product catalog</p>
+          <h1 className="text-3xl font-bold text-foreground">Products</h1>
+          <p className="text-muted-foreground mt-1">Manage your product catalog</p>
         </div>
         <Link href="/sellers/dashboard/products/new">
-          <Button className="bg-[#2e3621] hover:bg-black text-white">
+          <Button className="bg-primary hover:bg-primary/90 text-background">
             <Plus className="w-4 h-4 mr-2" />
             Add Product
           </Button>
@@ -131,7 +131,7 @@ export default function ProductsPage() {
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
                 value={searchQuery}
@@ -142,7 +142,7 @@ export default function ProductsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2e3621]"
+              className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -166,17 +166,17 @@ export default function ProductsPage() {
                       className="w-full sm:w-20 h-40 sm:h-20 object-cover rounded-lg"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-black text-lg">{product.name}</h3>
-                      <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
-                        <span className="font-semibold text-[#2e3621]">${product.price.toFixed(2)}</span>
+                      <h3 className="font-bold text-foreground text-lg">{product.name}</h3>
+                      <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                        <span className="font-semibold text-primary">${product.price.toFixed(2)}</span>
                         {product.totalStock !== undefined && (
-                          <span className="text-gray-500">Stock: {product.totalStock}</span>
+                          <span className="text-muted-foreground">Stock: {product.totalStock}</span>
                         )}
                         <span
                           className={`px-2 py-1 rounded-full text-xs font-medium ${
                             (product.totalStock ?? 0) > 0
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                              ? "bg-success/20 text-success"
+                              : "bg-destructive/20 text-destructive"
                           }`}
                         >
                           {(product.totalStock ?? 0) > 0 ? "In Stock" : "Out of Stock"}
@@ -188,7 +188,7 @@ export default function ProductsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => router.push(`/sellers/dashboard/products/${product.id}/variants`)}
-                        className="flex-1 sm:flex-none bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200"
+                        className="flex-1 sm:flex-none bg-primary/10 text-primary hover:bg-primary/20 border-primary/30"
                         title="View color and size variants"
                       >
                         <span className="hidden sm:inline">Variants</span>
@@ -216,7 +216,7 @@ export default function ProductsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => setDeleteConfirm(product.id)}
-                        className="flex-1 sm:flex-none text-red-600 hover:bg-red-50 bg-transparent"
+                        className="flex-1 sm:flex-none text-destructive hover:bg-destructive/10 bg-transparent"
                       >
                         <Trash2 className="w-4 h-4 sm:mr-2" />
                         <span className="hidden sm:inline">Delete</span>
@@ -228,9 +228,9 @@ export default function ProductsPage() {
 
               {/* Delete Confirmation Modal */}
               {deleteConfirm === product.id && (
-                <Card className="border-red-200 bg-red-50 mt-2">
+                <Card className="border-destructive/30 bg-destructive/10 mt-2">
                   <CardContent className="p-4">
-                    <p className="text-red-800 font-medium mb-4">
+                    <p className="text-destructive font-medium mb-4">
                       Are you sure you want to delete "{product.name}"? This action cannot be undone.
                     </p>
                     <div className="flex gap-2 justify-end">
@@ -242,7 +242,7 @@ export default function ProductsPage() {
                         Cancel
                       </Button>
                       <Button
-                        className="bg-red-600 hover:bg-red-700 text-white"
+                        className="bg-destructive hover:bg-destructive/90 text-background"
                         onClick={() => handleDelete(product.id)}
                         disabled={deleting}
                       >
@@ -255,7 +255,7 @@ export default function ProductsPage() {
             </div>
           ))
         ) : (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted-foreground">
             {products.length === 0 ? "No products yet. Create your first product!" : "No products match your filters."}
           </div>
         )}
