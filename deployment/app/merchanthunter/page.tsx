@@ -1,29 +1,29 @@
-'use client'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
-import { useEffect, useState } from 'react'
+async function getPWAHtml() {
+  try {
+    const filePath = join(process.cwd(), 'public/merchanthunter/index.html')
+    let html = readFileSync(filePath, 'utf-8')
+    
+    // Rewrite asset paths
+    html = html
+      .replace(/src="\/assets\//g, 'src="/merchanthunter/assets/')
+      .replace(/href="\/assets\//g, 'href="/merchanthunter/assets/')
+      .replace(/src="\/service-worker\.js/g, 'src="/merchanthunter/service-worker.js')
+      .replace(/href="\/manifest\.json/g, 'href="/merchanthunter/manifest.json')
+      .replace(/href="\/icon/g, 'href="/merchanthunter/icon')
+      .replace(/href="\/apple-icon/g, 'href="/merchanthunter/apple-icon')
+    
+    return html
+  } catch (error) {
+    return '<h1>Error loading PWA</h1>'
+  }
+}
 
-export default function MerchantHunter() {
-  const [html, setHtml] = useState<string>('')
-
-  useEffect(() => {
-    // Fetch the PWA HTML and modify asset paths
-    fetch('/merchanthunter/index.html')
-      .then(res => res.text())
-      .then(text => {
-        // Rewrite asset paths to include /merchanthunter prefix
-        const modified = text
-          .replace(/src="\/assets\//g, 'src="/merchanthunter/assets/')
-          .replace(/href="\/assets\//g, 'href="/merchanthunter/assets/')
-          .replace(/src="\/service-worker\.js/g, 'src="/merchanthunter/service-worker.js')
-          .replace(/href="\/manifest\.json/g, 'href="/merchanthunter/manifest.json')
-          .replace(/href="\/icon/g, 'href="/merchanthunter/icon')
-          .replace(/href="\/apple-icon/g, 'href="/merchanthunter/apple-icon')
-        
-        setHtml(modified)
-      })
-      .catch(err => console.error('Failed to load PWA:', err))
-  }, [])
-
+export default async function MerchantHunter() {
+  const html = await getPWAHtml()
+  
   return (
     <div dangerouslySetInnerHTML={{ __html: html }} />
   )
