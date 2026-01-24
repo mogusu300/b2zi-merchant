@@ -1,29 +1,39 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
+'use client'
 
-async function getPWAHtml() {
-  try {
-    const filePath = join(process.cwd(), 'public/merchanthunter/index.html')
-    let html = readFileSync(filePath, 'utf-8')
-    
-    // Rewrite asset paths
-    html = html
-      .replace(/src="\/assets\//g, 'src="/merchanthunter/assets/')
-      .replace(/href="\/assets\//g, 'href="/merchanthunter/assets/')
-      .replace(/src="\/service-worker\.js/g, 'src="/merchanthunter/service-worker.js')
-      .replace(/href="\/manifest\.json/g, 'href="/merchanthunter/manifest.json')
-      .replace(/href="\/icon/g, 'href="/merchanthunter/icon')
-      .replace(/href="\/apple-icon/g, 'href="/merchanthunter/apple-icon')
-    
-    return html
-  } catch (error) {
-    return '<h1>Error loading PWA</h1>'
+import { useEffect, useState } from 'react'
+
+export default function MerchantHunter() {
+  const [html, setHtml] = useState<string>('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+
+  useEffect(() => {
+    const fetchPWA = async () => {
+      try {
+        const response = await fetch('/api/pwa-html')
+        if (!response.ok) {
+          throw new Error(`Failed to load PWA: ${response.status}`)
+        }
+        const htmlContent = await response.text()
+        setHtml(htmlContent)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPWA()
+  }, [])
+
+  if (loading) {
+    return <div style={{ padding: '20px' }}>Loading PWA...</div>
   }
-}
 
-export default async function MerchantHunter() {
-  const html = await getPWAHtml()
-  
+  if (error) {
+    return <div style={{ padding: '20px', color: 'red' }}>Error: {error}</div>
+  }
+
   return (
     <div dangerouslySetInnerHTML={{ __html: html }} />
   )
