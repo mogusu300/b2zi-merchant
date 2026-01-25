@@ -7,7 +7,9 @@ export async function GET(
   { params }: { params: { path?: string[] } }
 ) {
   try {
-    const pathArray = params.path || []
+    // Handle params that might be a promise in Next.js 15+
+    const resolvedParams = await Promise.resolve(params)
+    const pathArray = resolvedParams.path || []
     const filePath = pathArray.length === 0 ? 'index.html' : pathArray.join('/')
     const fullPath = join(process.cwd(), 'public', 'merchanthunter', filePath)
 
