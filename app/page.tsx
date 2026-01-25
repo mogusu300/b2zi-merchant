@@ -426,7 +426,7 @@ export default function LandingPage() {
               {/* Merchant Hunter Link */}
               <div className="mt-12 pt-8 border-t border-white/20">
                 <p className="text-sm text-primary-foreground/70 mb-4">Interested in becoming a merchant hunter?</p>
-                <Link href="/merchanthunter">
+                <Link href="https://merchant-hunter-pwa.vercel.app/" target="_blank" rel="noopener noreferrer">
                   <Button
                     size="lg"
                     variant="secondary"
