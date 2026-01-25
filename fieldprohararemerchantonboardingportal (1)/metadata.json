@@ -1,0 +1,8 @@
+{
+  "name": "FieldPro Harare - Merchant Onboarding Portal",
+  "description": "A comprehensive portal for Direct Sales Agents to manage merchant acquisitions, track field activities, and visualize sales performance within the Harare CBD.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}

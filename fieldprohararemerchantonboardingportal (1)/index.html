@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    
+    <!-- PWA Metadata -->
+    <meta name="theme-color" content="#b1c98d">
+    <meta name="description" content="Professional merchant onboarding and management platform. Track, manage, and onboard merchants efficiently with b2zi.">
+    <meta name="keywords" content="merchant, onboarding, management, b2zi, business">
+    
+    <!-- Apple Specific -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="b2zi">
+    <meta name="apple-itunes-app" content="app-id=0000000000">
+    
+    <!-- iOS Splash Screens -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%232e3621' width='180' height='180'/><rect fill='%23b1c98d' x='40' y='40' width='100' height='100' rx='8'/><text x='90' y='110' font-size='70' font-weight='bold' fill='%232e3621' text-anchor='middle' dominant-baseline='middle'>b2</text></svg>">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Security & Performance -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect fill='%232e3621' width='32' height='32'/><rect fill='%23b1c98d' x='6' y='6' width='20' height='20' rx='2'/><text x='16' y='22' font-size='16' font-weight='bold' fill='%232e3621' text-anchor='middle' dominant-baseline='middle'>b2</text></svg>">
+    
+    <title>b2zi - Merchant Onboarding</title>
+    <script>
+      // Global error handler to debug fetch errors
+      window.addEventListener('error', (event) => {
+        console.error('[GlobalError]', event.error?.message || event.message);
+      });
+      window.addEventListener('unhandledrejection', (event) => {
+        console.error('[UnhandledRejection]', event.reason?.message || event.reason);
+      });
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      
+      /* Safe areas for notched devices */
+      .safe-top { padding-top: env(safe-area-inset-top); }
+      .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+      .safe-left { padding-left: env(safe-area-inset-left); }
+      .safe-right { padding-right: env(safe-area-inset-right); }
+      
+      /* Full screen immersive mode */
+      html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      
+      body { 
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* Prevent text selection and tap highlight for native feel */
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-zoom: fixed;
+      }
+      
+      /* Hide scrollbar in standalone mode */
+      html.pwa-standalone ::-webkit-scrollbar {
+        display: none;
+      }
+      
+      #root {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      
+      .bg-custom-olive { background-color: #2e3621; }
+      .text-custom-olive { color: #2e3621; }
+      .bg-custom-sage { background-color: #b1c98d; }
+      .text-custom-sage { color: #b1c98d; }
+      .border-custom-sage { border-color: #b1c98d; }
+      
+      /* Add smooth page transitions */
+      @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-slide-in-up {
+        animation: slideInUp 0.5s ease-out;
+      }
+      
+      /* Add skeleton loading animation */
+      @keyframes pulse-subtle {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
+      .animate-pulse-subtle {
+        animation: pulse-subtle 2s ease-in-out infinite;
+      }
+      
+      /* Add haptic-like visual feedback */
+      @keyframes tapFeedback {
+        0% { transform: scale(1); }
+        50% { transform: scale(0.98); }
+        100% { transform: scale(1); }
+      }
+      .active\:tap {
+        active: all 0.15s ease-out;
+      }
+      .active\:tap:active {
+        animation: tapFeedback 0.3s ease-out;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "recharts": "https://esm.sh/recharts@^3.6.0",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react": "https://esm.sh/react@^19.2.3",
+        "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-gray-50 text-gray-900 safe-area">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    
+    <!-- Service Worker Registration for PWA Support -->
+    <script>
+      // DISABLED TEMPORARILY FOR DEBUGGING
+      // Register service worker for offline support and caching
+      if (false && 'serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+            .then((registration) => {
+              console.log('[PWA] Service Worker registered:', registration);
+              
+              // Check for updates periodically
+              setInterval(() => {
+                registration.update();
+              }, 60000); // Check every minute
+            })
+            .catch((error) => {
+              console.log('[PWA] Service Worker registration failed:', error);
+            });
+        });
+        
+        // Listen for controller change (app update)
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      }
+      
+      // Add to home screen prompt handling
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('[PWA] Install prompt available');
+        
+        // Show install button if needed
+        const installBtn = document.getElementById('install-button');
+        if (installBtn) {
+          installBtn.style.display = 'block';
+        }
+      });
+      
+      // Handle install button click
+      window.installApp = async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log(`[PWA] User response: ${outcome}`);
+          deferredPrompt = null;
+        }
+      };
+      
+      // Handle app installed
+      window.addEventListener('appinstalled', () => {
+        console.log('[PWA] App installed successfully');
+        deferredPrompt = null;
+      });
+      
+      // Detect if app is running in standalone mode
+      if (window.navigator.standalone === true) {
+        console.log('[PWA] App running in standalone mode');
+        document.documentElement.classList.add('pwa-standalone');
+      }
+      
+      // Check for display mode
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('[PWA] App running as standalone app');
+        document.documentElement.classList.add('pwa-standalone');
+      }
+    </script>
+</body>
+</html>

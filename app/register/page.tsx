@@ -516,11 +516,11 @@ export default function RegisterPage() {
                           <div className="relative">
                             <Input
                               id="idFront"
+                              name="idFront"
                               type="file"
                               accept="image/*"
                               onChange={(e) => handleFileChange(e, "idFront")}
                               className="hidden"
-                              required
                             />
                             <label
                               htmlFor="idFront"
@@ -551,11 +551,11 @@ export default function RegisterPage() {
                           <div className="relative">
                             <Input
                               id="idBack"
+                              name="idBack"
                               type="file"
                               accept="image/*"
                               onChange={(e) => handleFileChange(e, "idBack")}
                               className="hidden"
-                              required
                             />
                             <label
                               htmlFor="idBack"

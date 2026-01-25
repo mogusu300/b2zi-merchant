@@ -377,17 +377,32 @@ export default function AdminPage() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  // Fetch merchants from database
+  // Fetch merchants from database (Next internal API)
   useEffect(() => {
     const fetchMerchants = async () => {
       try {
         setLoading(true)
         const response = await fetch('/api/merchants')
         if (!response.ok) {
-          throw new Error('Failed to fetch merchants')
+          throw new Error(`Failed to fetch merchants (${response.status})`)
         }
         const data = await response.json()
-        setMerchants(data)
+
+        // Normalize payload shapes
+        let merchantsPayload: any = []
+        if (Array.isArray(data)) merchantsPayload = data
+        else if (data && Array.isArray(data.data)) merchantsPayload = data.data
+        else if (data && data.data && Array.isArray(data.data.merchants)) merchantsPayload = data.data.merchants
+        else merchantsPayload = []
+
+        // Ensure dates are strings
+        const normalized = merchantsPayload.map((m: any) => ({
+          ...m,
+          createdAt: typeof m.createdAt === 'string' ? m.createdAt : (m.createdAt ? m.createdAt.toISOString() : new Date().toISOString()),
+          updatedAt: typeof m.updatedAt === 'string' ? m.updatedAt : (m.updatedAt ? m.updatedAt.toISOString() : new Date().toISOString()),
+        }))
+
+        setMerchants(normalized)
       } catch (error) {
         console.error('Error fetching merchants:', error)
         setMerchants([])

@@ -1,0 +1,310 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id              String                       @id @default(cuid())
+  businessName    String
+  ownerName       String
+  email           String                       @unique
+  phone           String
+  businessType    String?
+  businessAddress String?
+  password        String
+  idType          String
+  idFrontUrl      String?
+  idBackUrl       String?
+  status          String                       @default("pending")
+  isVerified      Boolean                      @default(false)
+  lastLogin       DateTime?
+  loginAttempts   Int                          @default(0)
+  lockedUntil     DateTime?
+  createdAt       DateTime                     @default(now())
+  updatedAt       DateTime                     @updatedAt
+  activityLogs    MerchantActivityLog[]
+  hunterMerchants MerchantHunterMerchant[]
+  merchantLogin   MerchantLogin?
+  documents       MerchantOnboardingDocument[]
+  products        Product[]
+  sessions        Session[]
+
+  @@index([email])
+  @@map("merchants")
+}
+
+model Customer {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  phone         String?
+  isVerified    Boolean   @default(false)
+  lastLogin     DateTime?
+  loginAttempts Int       @default(0)
+  lockedUntil   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  orders        Order[]
+  sessions      Session[]
+
+  @@index([email])
+  @@map("customers")
+}
+
+model Session {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  type       String
+  userId     String
+  merchantId String?
+  customerId String?
+  ipAddress  String?
+  userAgent  String?
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  merchant   Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@index([merchantId])
+  @@index([customerId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  category    String
+  images      String[]
+  sellerId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  seller      Merchant @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@map("products")
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  customerId String
+  total      Float
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
+}
+
+model MerchantHunter {
+  id                 String                   @id @default(cuid())
+  email              String                   @unique
+  phone              String                   @unique
+  firstName          String
+  lastName           String
+  password           String
+  region             String?
+  managerId          String?
+  isActive           Boolean                  @default(true)
+  lastLoginAt        DateTime?
+  lastLoginIp        String?
+  targetMonthly      Int                      @default(0)
+  onboardedCount     Int                      @default(0)
+  rejectedCount      Int                      @default(0)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  performanceMetrics AgentPerformanceMetric[]
+  targets            AgentTarget[]
+  activityLogs       MerchantActivityLog[]
+  merchants          MerchantHunterMerchant[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([isActive])
+  @@map("merchant_hunters")
+}
+
+model MerchantHunterMerchant {
+  id                    String         @id @default(cuid())
+  completedAt           DateTime?
+  createdAt             DateTime       @default(now())
+  merchantHunterId      String
+  merchantId            String
+  onboardingDaysElapsed Int            @default(0)
+  onboardingStartedAt   DateTime       @default(now())
+  status                String         @default("not_started")
+  updatedAt             DateTime       @updatedAt
+  merchantHunter        MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+  merchant              Merchant       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@unique([merchantHunterId, merchantId])
+  @@index([merchantHunterId])
+  @@index([merchantId])
+  @@index([status])
+  @@map("merchant_hunter_merchants")
+}
+
+model MerchantOnboardingDocument {
+  id                 String    @id @default(cuid())
+  createdAt          DateTime  @default(now())
+  documentType       String
+  extractedData      Json?
+  fileName           String
+  fileSize           Int
+  fileUrl            String
+  isVerified         Boolean   @default(false)
+  merchantId         String
+  mimeType           String
+  ocrConfidence      Float?
+  updatedAt          DateTime  @updatedAt
+  uploadedAt         DateTime  @default(now())
+  uploadedByHunterId String?
+  verificationNotes  String?
+  verifiedAt         DateTime?
+  verifiedByAdminId  String?
+  merchant           Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@index([documentType])
+  @@index([isVerified])
+  @@map("merchant_onboarding_documents")
+}
+
+model MerchantActivityLog {
+  metadata             Json?
+  id                   String          @id @default(cuid())
+  action               String
+  createdAt            DateTime        @default(now())
+  description          String
+  merchantHunterId     String?
+  merchantId           String
+  performedByIp        String?
+  performedByRole      String
+  performedByUserAgent String?
+  merchantHunter       MerchantHunter? @relation(fields: [merchantHunterId], references: [id])
+  merchant             Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@index([merchantHunterId])
+  @@index([action])
+  @@map("merchant_activity_logs")
+}
+
+model AgentTarget {
+  id               String         @id @default(cuid())
+  createdAt        DateTime       @default(now())
+  createdByAdminId String?
+  merchantHunterId String
+  month            Int
+  targetCount      Int
+  updatedAt        DateTime       @updatedAt
+  year             Int
+  merchantHunter   MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+
+  @@unique([merchantHunterId, year, month])
+  @@index([merchantHunterId])
+  @@map("agent_targets")
+}
+
+model AgentPerformanceMetric {
+  id                    String         @id @default(cuid())
+  averageOnboardingDays Float          @default(0)
+  calculatedAt          DateTime?
+  conversionRate        Float          @default(0)
+  createdAt             DateTime       @default(now())
+  isCalculated          Boolean        @default(false)
+  merchantHunterId      String
+  month                 Int
+  totalOnboarded        Int            @default(0)
+  totalPending          Int            @default(0)
+  totalRejected         Int            @default(0)
+  updatedAt             DateTime       @updatedAt
+  year                  Int
+  merchantHunter        MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+
+  @@unique([merchantHunterId, year, month])
+  @@index([merchantHunterId])
+  @@map("agent_performance_metrics")
+}
+
+model MerchantLogin {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+  lockoutUntil  DateTime?
+  loginAttempts Int       @default(0)
+  merchantId    String    @unique
+  otpEnabled    Boolean   @default(false)
+  password      String?
+  phone         String    @unique
+  updatedAt     DateTime  @updatedAt
+  verifiedAt    DateTime?
+  merchant      Merchant  @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([phone])
+  @@index([merchantId])
+  @@map("merchant_logins")
+}
+
+model RefreshToken {
+  id           String     @id @default(cuid())
+  token        String     @unique
+  type         TokenType
+  entityId     String
+  entityType   EntityType
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  isValid      Boolean    @default(true)
+  issuedAt     DateTime   @default(now())
+  issuedFromIp String?
+  userAgent    String?
+  createdAt    DateTime   @default(now())
+
+  @@index([token])
+  @@index([entityId, entityType])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model AdminUser {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  password    String
+  name        String
+  role        AdminRole
+  isActive    Boolean   @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("admin_users")
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+}
+
+enum EntityType {
+  HUNTER
+  MERCHANT
+}
+
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+  MANAGER
+}

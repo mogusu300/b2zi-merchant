@@ -2,15 +2,30 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import { ClientWrapper } from "@/components/client-wrapper"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "B2Zi - Zimbabwe's Premier Merchant Marketplace",
-  description:
-    "Join B2Zi's merchant platform and connect your business with thousands of customers across Zimbabwe. Register now for exclusive early access and premium placement.",
+  title: "FieldPro - Merchant Onboarding",
+  description: "Mobile app for merchant hunters to onboard merchants in Harare CBD",
   generator: "v0.app",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "FieldPro",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   icons: {
     icon: [
       {
@@ -38,6 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
+        <ClientWrapper />
         {children}
       </body>
     </html>

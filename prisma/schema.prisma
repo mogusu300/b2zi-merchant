@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,275 +7,295 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Merchant {
-  id                String    @id @default(cuid())
-  businessName      String
-  ownerName         String
-  email             String    @unique
-  phone             String
-  businessType      String?
-  businessAddress   String?
-  password          String    // hashed password
-  idType            String    // "nrc" or "passport"
-  idFrontUrl        String?   // URL to uploaded ID front
-  idBackUrl         String?   // URL to uploaded ID back
-  status            String    @default("pending") // pending, approved, rejected
-  isVerified        Boolean   @default(false)
-  lastLogin         DateTime?
-  loginAttempts     Int       @default(0)
-  lockedUntil       DateTime?
-  products          Product[] // Products sold by this merchant
-  sessions          Session[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+model MerchantHunter {
+  id                        String                   @id
+  email                     String                   @unique
+  phone                     String                   @unique
+  firstName                 String
+  lastName                  String
+  password                  String
+  region                    String?
+  managerId                 String?
+  isActive                  Boolean                  @default(true)
+  lastLoginAt               DateTime?
+  lastLoginIp               String?
+  targetMonthly             Int                      @default(0)
+  onboardedCount            Int                      @default(0)
+  rejectedCount             Int                      @default(0)
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime
+  agent_performance_metrics AgentPerformanceMetric[]
+  agent_targets             AgentTarget[]
+  merchant_activity_logs    MerchantActivityLog[]
+  merchant_hunter_merchants MerchantHunterMerchant[]
 
   @@index([email])
+  @@index([isActive])
+  @@index([phone])
+  @@map("merchant_hunters")
 }
 
-model Customer {
-  id                String    @id @default(cuid())
-  email             String    @unique
-  name              String
-  password          String    // hashed password
-  phone             String?
-  isVerified        Boolean   @default(false)
-  lastLogin         DateTime?
-  loginAttempts     Int       @default(0)
-  lockedUntil       DateTime?
-  orders            Order[]
-  sessions          Session[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+model MerchantHunterMerchant {
+  id                    String         @id
+  completedAt           DateTime?
+  createdAt             DateTime       @default(now())
+  merchantHunterId      String
+  merchantId            String
+  onboardingDaysElapsed Int            @default(0)
+  onboardingStartedAt   DateTime       @default(now())
+  status                String         @default("not_started")
+  updatedAt             DateTime
+  merchant_hunters      MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+  merchants             merchants      @relation(fields: [merchantId], references: [id], onDelete: Cascade)
 
-  @@index([email])
-}
-
-model Session {
-  id            String    @id @default(cuid())
-  token         String    @unique
-  type          String    // "merchant" or "customer"
-  userId        String    // Either Merchant or Customer ID
-  merchantId    String?
-  customerId    String?
-  merchant      Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  customer      Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  ipAddress     String?
-  userAgent     String?
-  expiresAt     DateTime
-  createdAt     DateTime  @default(now())
-
-  @@index([token])
-  @@index([userId])
+  @@unique([merchantHunterId, merchantId])
+  @@index([merchantHunterId])
   @@index([merchantId])
+  @@index([status])
+  @@map("merchant_hunter_merchants")
+}
+
+model MerchantOnboardingDocument {
+  id                 String    @id
+  createdAt          DateTime  @default(now())
+  documentType       String
+  extractedData      Json?
+  fileName           String
+  fileSize           Int
+  fileUrl            String
+  isVerified         Boolean   @default(false)
+  merchantId         String
+  mimeType           String
+  ocrConfidence      Float?
+  updatedAt          DateTime
+  uploadedAt         DateTime  @default(now())
+  uploadedByHunterId String?
+  verificationNotes  String?
+  verifiedAt         DateTime?
+  verifiedByAdminId  String?
+  merchants          merchants @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([documentType])
+  @@index([isVerified])
+  @@index([merchantId])
+  @@map("merchant_onboarding_documents")
+}
+
+model MerchantActivityLog {
+  metadata             Json?
+  id                   String          @id
+  action               String
+  createdAt            DateTime        @default(now())
+  description          String
+  merchantHunterId     String?
+  merchantId           String
+  performedByIp        String?
+  performedByRole      String
+  performedByUserAgent String?
+  merchant_hunters     MerchantHunter? @relation(fields: [merchantHunterId], references: [id])
+  merchants            merchants       @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([action])
+  @@index([merchantHunterId])
+  @@index([merchantId])
+  @@map("merchant_activity_logs")
+}
+
+model AgentTarget {
+  id               String         @id
+  createdAt        DateTime       @default(now())
+  createdByAdminId String?
+  merchantHunterId String
+  month            Int
+  targetCount      Int
+  updatedAt        DateTime
+  year             Int
+  merchant_hunters MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+
+  @@unique([merchantHunterId, year, month])
+  @@index([merchantHunterId])
+  @@map("agent_targets")
+}
+
+model AgentPerformanceMetric {
+  id                    String         @id
+  averageOnboardingDays Float          @default(0)
+  calculatedAt          DateTime?
+  conversionRate        Float          @default(0)
+  createdAt             DateTime       @default(now())
+  isCalculated          Boolean        @default(false)
+  merchantHunterId      String
+  month                 Int
+  totalOnboarded        Int            @default(0)
+  totalPending          Int            @default(0)
+  totalRejected         Int            @default(0)
+  updatedAt             DateTime
+  year                  Int
+  merchant_hunters      MerchantHunter @relation(fields: [merchantHunterId], references: [id], onDelete: Cascade)
+
+  @@unique([merchantHunterId, year, month])
+  @@index([merchantHunterId])
+  @@map("agent_performance_metrics")
+}
+
+model MerchantLogin {
+  id            String    @id
+  createdAt     DateTime  @default(now())
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  lastLoginIp   String?
+  lockoutUntil  DateTime?
+  loginAttempts Int       @default(0)
+  merchantId    String    @unique
+  otpEnabled    Boolean   @default(false)
+  password      String?
+  phone         String    @unique
+  updatedAt     DateTime
+  verifiedAt    DateTime?
+  merchants     merchants @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@index([phone])
+  @@map("merchant_logins")
+}
+
+model admin_users {
+  id          String    @id
+  email       String    @unique
+  password    String
+  name        String
+  role        AdminRole
+  isActive    Boolean   @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+
+  @@index([email])
+  @@index([role])
+}
+
+model customers {
+  id            String     @id
+  email         String     @unique
+  name          String
+  password      String
+  phone         String?
+  isVerified    Boolean    @default(false)
+  lastLogin     DateTime?
+  loginAttempts Int        @default(0)
+  lockedUntil   DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime
+  orders        orders[]
+  sessions      sessions[]
+
+  @@index([email])
+}
+
+model merchants {
+  id                            String                       @id
+  businessName                  String
+  ownerName                     String
+  email                         String                       @unique
+  phone                         String
+  businessType                  String?
+  businessAddress               String?
+  password                      String
+  idType                        String
+  idFrontUrl                    String?
+  idBackUrl                     String?
+  status                        String                       @default("pending")
+  isVerified                    Boolean                      @default(false)
+  lastLogin                     DateTime?
+  loginAttempts                 Int                          @default(0)
+  lockedUntil                   DateTime?
+  createdAt                     DateTime                     @default(now())
+  updatedAt                     DateTime
+  merchant_activity_logs        MerchantActivityLog[]
+  merchant_hunter_merchants     MerchantHunterMerchant[]
+  merchant_logins               MerchantLogin?
+  merchant_onboarding_documents MerchantOnboardingDocument[]
+  products                      products[]
+  sessions                      sessions[]
+
+  @@index([email])
+}
+
+model orders {
+  id         String    @id
+  customerId String
+  total      Float
+  status     String    @default("pending")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime
+  customers  customers @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model products {
+  id          String    @id
+  name        String
+  description String
+  price       Float
+  category    String
+  images      String[]
+  sellerId    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  merchants   merchants @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+}
+
+model refresh_tokens {
+  id           String     @id
+  token        String     @unique
+  type         TokenType
+  entityId     String
+  entityType   EntityType
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  isValid      Boolean    @default(true)
+  issuedAt     DateTime   @default(now())
+  issuedFromIp String?
+  userAgent    String?
+  createdAt    DateTime   @default(now())
+
+  @@index([entityId, entityType])
+  @@index([expiresAt])
+  @@index([token])
+}
+
+model sessions {
+  id         String     @id
+  token      String     @unique
+  type       String
+  userId     String
+  merchantId String?
+  customerId String?
+  ipAddress  String?
+  userAgent  String?
+  expiresAt  DateTime
+  createdAt  DateTime   @default(now())
+  customers  customers? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  merchants  merchants? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
   @@index([customerId])
   @@index([expiresAt])
+  @@index([merchantId])
+  @@index([token])
+  @@index([userId])
 }
 
-model Product {
-  id            String   @id @default(cuid())
-  name          String
-  description   String
-  price         Float    // Base price - can be overridden by variants
-  category      String
-  images        String[] // Primary product images
-  sellerId      String
-  seller        Merchant @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  
-  // Variant configuration
-  variantGroups ProductVariantGroup[]
-  variants      ProductVariant[]
-  
-  // Simple color and type variants
-  colorVariants Json?    // [{color: string, price?: number}]
-  typeVariants  Json?    // [{type: string, price?: number}]
-  
-  // Stock and status
-  inStock       Boolean  @default(true)
-  totalStock    Int      @default(0)   // Cached total stock across all variants
-  
-  // Ratings
-  rating        Float?
-  reviews       Int      @default(0)
-  
-  // Relationships
-  orderItems    OrderItem[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@index([sellerId])
-  @@index([category])
+enum AdminRole {
+  ADMIN
+  SUPER_ADMIN
+  MANAGER
 }
 
-model ProductVariantGroup {
-  id        String @id @default(cuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name      String  // e.g., "Color", "Size", "Material"
-  values    String[] // e.g., ["Red", "Blue", "Green"]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([productId])
-  @@unique([productId, name])
+enum EntityType {
+  HUNTER
+  MERCHANT
 }
 
-model ProductVariant {
-  id          String @id @default(cuid())
-  productId   String
-  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  
-  // Variant attributes - stored as JSON for flexibility
-  // e.g., {"color": "Red", "size": "M"}
-  attributes  Json
-  
-  // SKU for tracking
-  sku         String?
-  
-  // Pricing (optional - inherits from product if not set)
-  price       Float?
-  
-  // Inventory management
-  stock       Int     @default(0)
-  reserved    Int     @default(0)  // Stock reserved for orders
-  
-  // Variant-specific images (optional)
-  images      String[]
-  
-  // Shipping
-  weight      Float?  // in grams
-  dimensions  Json?   // {length, width, height} in cm
-  
-  // Status
-  active      Boolean @default(true)
-  
-  // Tracking
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([productId])
-  @@unique([productId, sku])
-}
-
-model Order {
-  id        String    @id @default(cuid())
-  customerId String
-  customer  Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  items     OrderItem[]
-  total     Float
-  status    String    @default("pending_approval") // pending_approval, approved, awaiting_payment, paid, dispatched, in_transit, delivered, rejected, cancelled
-  
-  // Shipping & Delivery
-  deliveryAddress String     // Full address for delivery
-  deliveryCity    String
-  deliveryState   String
-  deliveryZipCode String
-  
-  // Customer Contact Information
-  customerName    String
-  customerEmail   String
-  customerPhone   String     // Phone number for delivery contact
-  customerWhatsApp String?    // Optional WhatsApp number for seller communication
-  
-  // APPROVAL WORKFLOW
-  approvedAt      DateTime?       // When merchant approved
-  approvedBy      String?         // Merchant ID who approved
-  rejectedAt      DateTime?       // When merchant rejected
-  rejectedReason  String?         // Why rejected (optional)
-  
-  // PAYMENT
-  paidAt          DateTime?       // When payment received
-  paymentStatus   String?         // "pending" | "paid" | "failed"
-  paymentMethod   String?         // "card" | "cash" | "bank_transfer"
-  
-  // TRACKING & FULFILLMENT
-  dispatchedAt    DateTime?       // When seller dispatched
-  trackedAt       DateTime?       // Last tracking update
-  trackingStatus  String?         // "dispatched" | "in_transit" | "delivered"
-  trackingMessage String?         // "Driver on the way", "Out for delivery", etc.
-  trackingNumber  String?
-  estimatedDelivery String?
-  driverName      String?         // Optional driver info
-  driverPhone     String?         // Optional driver info
-  
-  // AUDIT
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  
-  // RELATIONSHIPS
-  orderEvents     OrderEvent[]
-  orderPayments   OrderPayment[]
-
-  @@index([customerId])
-  @@index([status])
-  @@index([approvedBy])
-}
-
-model OrderItem {
-  id          String  @id @default(cuid())
-  orderId     String
-  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product @relation(fields: [productId], references: [id])
-  variantId   String?
-  variantData Json?   // Snapshot of variant attributes selected
-  quantity    Int
-  price       Float   // Price at time of order
-  sku         String? // SKU snapshot
-
-  @@index([orderId])
-  @@index([productId])
-}
-
-model OrderEvent {
-  id          String    @id @default(cuid())
-  orderId     String
-  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  
-  // EVENT TYPE
-  eventType   String    // "created" | "approved" | "rejected" | "paid" | "dispatched" | "tracking_updated" | "delivered" | "cancelled"
-  
-  // WHO DID IT
-  actorId     String?   // User ID (merchant or customer)
-  actorType   String?   // "merchant" | "customer" | "system"
-  
-  // WHAT CHANGED
-  oldStatus   String?   // Previous status
-  newStatus   String?   // New status
-  message     String?   // Additional context
-  metadata    Json?     // Extra data (payment details, tracking info, etc.)
-  
-  // TIMESTAMPS
-  createdAt   DateTime  @default(now())
-  
-  @@index([orderId])
-  @@index([createdAt])
-  @@index([eventType])
-}
-
-model OrderPayment {
-  id            String    @id @default(cuid())
-  orderId       String
-  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  
-  // PAYMENT DETAILS
-  amount        Float
-  currency      String    @default("ZWL")
-  method        String    // "card" | "bank_transfer" | "cash_on_delivery"
-  status        String    // "pending" | "processing" | "completed" | "failed"
-  
-  // PROVIDER REFERENCES
-  stripePaymentIntentId  String?
-  transactionId          String?
-  
-  // ERROR TRACKING
-  failureReason String?
-  failureCode   String?
-  
-  // TIMESTAMPS
-  initiatedAt   DateTime  @default(now())
-  completedAt   DateTime?
-  updatedAt     DateTime  @updatedAt
-  
-  @@index([orderId])
-  @@index([status])
+enum TokenType {
+  ACCESS
+  REFRESH
 }
