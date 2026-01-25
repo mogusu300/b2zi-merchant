@@ -1,23 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/merchanthunter/:path*',
-          destination: '/merchanthunter/:path*',
-        },
-      ],
-    }
+  // Ensure webpack includes public folder contents
+  webpack: (config, { isServer }) => {
+    return config
   },
+  // Use ISR for PWA assets
   headers: async () => {
     return [
       {
-        source: '/merchanthunter/(.*)',
+        source: '/merchanthunter/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, must-revalidate',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
